@@ -14,7 +14,7 @@ const OFF = el.const({ value: 0 });
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'seqTest';
+  title = 'PauseTape';
 
   isAudioOn = false;
 
