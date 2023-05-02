@@ -2,29 +2,17 @@
 
 @tailwind base;
 @layer base {
-    h1 {
-      @apply text-2xl;
-    }
-    h2 {
-      @apply text-xl;
-    }
-    h3 {
-      @apply text-lg;
-    }
-    button {
-      @apply hover:bg-gray-300 text-gray-400 py-2 px-4 rounded-full w-fit drop-shadow-sm bg-gradient-to-b from-white to-gray-100;
-    }
-    h1, h2, h3, h4, h5, h6, p, a, input, label, span, div {
-      @apply text-gray-400;
-    }
-    input {
-      @apply rounded w-20 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500;
-    }
     .font-bebas-neue {
       letter-spacing: 0.05rem;
     }
-    .button-toolbar {
-      @apply bg-gradient-to-b from-gray-100 to-gray-200;
+    .bottom-side-gradient {
+      background: linear-gradient(
+        to left,
+        #d1d5db55 0%,
+        #f3f4f6 5%,
+        #f3f4f6 95%,
+        #d1d5db55 100%
+      );
     }
 
     /* For Webkit-based browsers (Chrome, Safari and Opera) */
@@ -35,6 +23,10 @@
     .scrollbar-hide {
       -ms-overflow-style: none;  /* IE and Edge */
       scrollbar-width: none;  /* Firefox */
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 48;
     }
   }
 @tailwind components;

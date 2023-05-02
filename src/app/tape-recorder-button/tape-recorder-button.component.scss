@@ -1,0 +1,89 @@
+$height: 150;
+$depth: 10;
+$color: gray;
+$text-color: darken($color, 5%);
+$button-speed: 0.05;
+$timing-function: ease-out;
+button {
+  border: none;
+}
+.button {
+  cursor: pointer;
+  box-sizing: border-box;
+  font-size: 1.5em;
+  font-weight: bold;
+  height: $height + px;
+  padding: 10px;
+  display: inline-block;
+  width: 100px;
+  background: linear-gradient(
+    to bottom,
+    lighten($color, 15%) 0%,
+    darken($color, 8%) 85%,
+    $color 100%
+  );
+  border-radius: 7px;
+  border-bottom: 2px solid lighten($color, 8%);
+  top: 0;
+  transition: all ($button-speed + s) $timing-function;
+  position: relative;
+}
+.button:active {
+  top: $depth + px;
+  text-shadow: 0 -2px 0 darken($color, 0%), 0 1px 1px lighten($color, 20%),
+    0 0 4px white;
+  color: lighten($color, 50%);
+  background: linear-gradient(
+    to bottom,
+    lighten($color, 11%) 0%,
+    darken($color, 12%) 85%,
+    darken($color, 4%) 100%
+  );
+  &:before {
+    top: 0;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.5), 0 3px 9px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// bottom side & shadow
+.button:before {
+  display: inline-block;
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  top: ($depth) + px;
+  border-radius: 7px;
+  height: ($height) + px;
+  background: linear-gradient(
+    to top,
+    darken($color, 35%) 0%,
+    darken($color, 15%) $depth + px
+  );
+  transition: all (($button-speed * 1.3) + s) $timing-function;
+  box-shadow: 0 1px 0 2px rgba(0, 0, 0, 0.3),
+    0 5px ($depth * 0.4 + px) rgba(0, 0, 0, 0.5),
+    0 ($depth * 1.8 + px) 9px rgba(0, 0, 0, 0.2);
+}
+
+::ng-deep .button .icon svg {
+  fill: $text-color;
+  transform: translateY(25px);
+  filter: drop-shadow(0 -1px 1px darken($color, 15%)) drop-shadow(0 1px 1px lighten($color, 15%));
+}
+
+::ng-deep .button:active .icon svg {
+  fill: lighten($text-color, 44%);
+  filter: drop-shadow(0 0 12px lighten($color, 50%));
+}
+
+::ng-deep .button:active .play svg {
+  fill: #87eeac;
+  filter: drop-shadow(0 0 12px lighten(#87eeac, 15%));
+}
+
+::ng-deep .button:active .record svg {
+  fill: #ee8787;
+  filter: drop-shadow(0 0 12px lighten(#ee8787, 15%));
+}
