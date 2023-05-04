@@ -31,7 +31,8 @@ button {
     transition: all ($button-speed + s) $timing-function;
     position: relative;
 }
-.button:active {
+.button:active,
+.button.pressed {
     top: $depth + px;
     color: lighten($color, 50%);
     background: linear-gradient(
@@ -56,7 +57,8 @@ button {
     border-top: 2px solid lighten($red-color, 15%);
     border-bottom: 2px solid lighten($red-color, 10%);
 }
-.rec:active {
+.rec:active,
+.rec.pressed {
     background: linear-gradient(
         to bottom,
         darken($red-color, 3%) 0%,
@@ -66,7 +68,8 @@ button {
 
     &:before {
         top: 0;
-        box-shadow: 0 3px 3px rgba(123, 0, 0, 0.5), 0 3px 9px rgba(123, 0, 0, 0.3);
+        box-shadow: 0 3px 3px rgba(123, 0, 0, 0.5),
+            0 3px 9px rgba(123, 0, 0, 0.3);
     }
 }
 
@@ -94,11 +97,11 @@ button {
 }
 
 .rec:before {
-  background: linear-gradient(
-    to top,
-    darken($red-color, 35%) 0%,
-    darken($red-color, 15%) $depth + px
-);
+    background: linear-gradient(
+        to top,
+        darken($red-color, 35%) 0%,
+        darken($red-color, 15%) $depth + px
+    );
     box-shadow: 0 1px 0 2px rgba(123, 0, 0, 0.3),
         0 5px ($depth * 0.4 + px) rgba(123, 0, 0, 0.5),
         0 ($depth * 1.8 + px) 9px rgba(123, 0, 0, 0.2);
@@ -117,13 +120,14 @@ button {
         drop-shadow(0 1px 1px lighten($red-color, 15%));
 }
 
-::ng-deep .button:active .icon svg {
+::ng-deep .button:active .icon svg,
+::ng-deep .button.pressed .icon svg {
     fill: white;
     filter: drop-shadow(0 0 8px lighten($color, 50%));
 }
 
-::ng-deep .button:active .play svg {
-    // fill: #87eeac;
+::ng-deep .button:active .play svg,
+::ng-deep .button.pressed .play svg {
     fill: lighten(green, 45%);
     filter: drop-shadow(0 0 8px lighten(green, 50%));
 }

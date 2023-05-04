@@ -1,4 +1,8 @@
-<button class="button" [ngClass]="{ rec: iconName == 'record' }">
+<button
+    class="button"
+    [ngClass]="{ rec: iconName == 'record', pressed: pressed }"
+    (click)="onBtnPress()"
+>
     <div
         class="flex flex-row justify-center icon"
         [ngClass]="{ play: iconName == 'play', record: iconName == 'record' }"

@@ -1,4 +1,4 @@
-export enum AudioTransport {
+export enum Transport {
     Play = 'play',
     Pause = 'pause',
     Stop = 'stop',

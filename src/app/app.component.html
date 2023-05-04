@@ -8,6 +8,7 @@
             ON/OFF
         </button>
     </div>
+
     <!-- Main White Container -->
     <div
         class="bg-white w-[calc(67vw)] h-[calc(67vh)] flex flex-col justify-center rounded-xl shadow-xl z-0"
@@ -21,55 +22,79 @@
                     [title]="'Hard Bop #3'"
                     [color]="'green'"
                 ></app-cassette>
+
                 <!-- Buttons Deck 1 -->
                 <div class="container-deck1 flex flex-row gap-[3px] w-fit z-10">
                     <app-tape-recorder-button
-                        [iconName]="'pause'" [btnColor]="'gray'"
+                        [iconName]="'pause'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="1"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'stop'" [btnColor]="'gray'"
+                        [iconName]="'stop'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="1"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'rewind'" [btnColor]="'gray'"
+                        [iconName]="'rewind'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="1"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'fast-forward'" [btnColor]="'gray'"
+                        [iconName]="'fast-forward'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="1"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'play'" [btnColor]="'gray'"
+                        [iconName]="'play'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="1"
                     ></app-tape-recorder-button>
                 </div>
             </div>
+
+            <!-- Deck 2 -->
             <div class="flex flex-col items-center gap-10">
                 <app-cassette
                     class="cassette2"
                     [title]="'Chop Mix #1'"
                     [color]="'blue'"
                 ></app-cassette>
+
                 <!-- Buttons Deck 2 -->
                 <div class="container-deck2 flex flex-row gap-[3px] w-fit z-10">
                     <app-tape-recorder-button
-                        [iconName]="'pause'" [btnColor]="'gray'"
+                        [iconName]="'pause'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="2"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'stop'" [btnColor]="'gray'"
+                        [iconName]="'stop'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="2"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'rewind'" [btnColor]="'gray'"
+                        [iconName]="'rewind'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="2"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'fast-forward'" [btnColor]="'gray'"
+                        [iconName]="'fast-forward'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="2"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'play'" [btnColor]="'gray'"
+                        [iconName]="'play'"
+                        [btnColor]="'gray'"
+                        [deckNumber]="2"
                     ></app-tape-recorder-button>
                     <app-tape-recorder-button
-                        [iconName]="'record'" [btnColor]="'red'"
+                        [iconName]="'record'"
+                        [btnColor]="'red'"
+                        [deckNumber]="2"
                     ></app-tape-recorder-button>
                 </div>
             </div>
         </div>
-        <!-- <div class="flex flex-row w-full justify-evenly"> -->
-        <!-- </div> -->
     </div>
 </div>
