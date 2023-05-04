@@ -1,11 +1,24 @@
-.container:before {
+$btn-width: 50px;
+$deck1-btn-count: 5;
+$deck2-btn-count: 6;
+$gap: 3px;
+
+.container-deck1:before, .container-deck2:before {
     content: "";
     background: #7b7b7b;
-    width: 100%;
-    height: 100%;
+    height: 63px;
     z-index: -1;
     display: inline-block;
     position: absolute;
-    transform: translateY(13px);
+    transform: translateY(12px);
     border-radius: 5px;
+    filter: blur(1px);
+}
+
+.container-deck1:before {
+    width: $btn-width * $deck1-btn-count + $gap * ($deck1-btn-count - 1);
+}
+
+.container-deck2:before {
+    width: $btn-width * $deck2-btn-count + $gap * ($deck2-btn-count - 1);
 }

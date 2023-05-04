@@ -1,317 +1,245 @@
-// @use postcss-nested;
-
-@font-face {
-  font-family: "BioRhyme";
-  src: url(https://manzdev.github.io/twitch-cassette/assets/biorhyme.woff) format("woff");
-}
-
-@font-face {
-  font-family: "Desyrel";
-  src:
-    url(https://manzdev.github.io/twitch-cassette/assets/desyrel.woff) format("woff"),
-    url(https://manzdev.github.io/twitch-cassette/assets/desyrel.woff2) format("woff2");
-}
-
 .cassette {
-  --width: 448px;
-  --bgcolor: #dcdcdc;
-  --border-color: #e5e5e5;
-  --light-color: #f1efef;
-  --dark-color: #c9c9c9;
-  --external-notch-shape: polygon(100% 0, 0 5%, 0 95%, 100% 100%);
+    --width: 224px;
+    --bgcolor: #dcdcdc;
+    --border-color: #e5e5e5;
+    --light-color: #f1efef;
+    --dark-color: #c9c9c9;
+    --external-notch-shape: polygon(100% 0, 0 5%, 0 95%, 100% 100%);
 
-  width: var(--width);
-  background: linear-gradient(var(--bgcolor), #b4b4b4);
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+    width: var(--width);
+    background: linear-gradient(var(--bgcolor), #b4b4b4);
+    border-radius: calc(var(--width) / 30);
+    display: flex;
+    flex-direction: column;
+    position: relative;
 
-  &::before,
-  &::after {
-    content: "";
-    display: block;
-    width: 5px;
-    height: 75px;
-    position: absolute;
-    bottom: 20px;
-    clip-path: var(--external-notch-shape);
-  }
+    &::before,
+    &::after {
+        content: "";
+        display: block;
+        width: calc(var(--width) / 90);
+        height: calc(var(--width) / 6);
+        position: absolute;
+        bottom: calc(var(--width) / 22);
+        clip-path: var(--external-notch-shape);
+    }
 
-  &::before {
-    left: -5px;
-    background: var(--dark-color);
-  }
-
-  &::after {
-    right: -5px;
-    transform: scaleX(-1);
+    &::before {
+        left: calc(calc(var(--width) / 448) * (-5));
         background: var(--dark-color);
-  }
-
-  & .medium-tape {
-    display: flex;
-    justify-content: center;
-
-    & .label-container {
-      width: 400px;
-      background: var(--dark-color);
-      border-radius: 12px;
-      padding: 4px;
-
-      & .label {
-        background: #eee;
-        background-image:
-          repeating-linear-gradient(transparent 0 20px, #c4c4c4 20px 21px),
-          linear-gradient(278deg, #f3f3f3, #e8e8e8);
-        border-radius: 10px;
-
-        & .top-label {
-          height: 62px;
-          font-weight: normal;
-          font-size: 16px;
-
-          & .predefined-text {
-            font-family: Arial;
-            font-size: 9px;
-            padding: 6px 6px 4px;
-            position: absolute;
-            color: #606060;
-          }
-
-          & .top-text {
-            font-family: "Desyrel", sans-serif;
-            padding: 6px 10px;
-            font-size: 36px;
-            line-height: 110%;
-            text-align: center;
-
-            & div {
-              color: #484848;
-            }
-          }
-        }
-
-        & .medium-label {
-          height: 127px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 0 0 10px 10px;
-
-          & .gap-container {
-            width: 250px;
-            height: 75px;
-            border: 4px solid #aaa9;
-            background: var(--dark-color);
-            background-image: linear-gradient(76deg, transparent, #aaa2);
-            border-radius: 3em;
-
-            & .gap {
-              width: 242px;
-              height: 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-
-              & .tapereel {
-                width: 50px;
-                height: 50px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border-radius: 50%;
-                border: 4px solid #eeeeee;
-                box-shadow: 0 0 0 4px #5a5a5a;
-                background: radial-gradient(#cccfd6 0%, #65676d 25%, #000000 100%);
-
-                &.left {
-                  animation: spin 6s linear infinite reverse;
-                }
-
-                &.right {
-                  animation: spin 8s linear infinite reverse;
-                }
-
-                & .notch {
-                  background: linear-gradient(to right, #eeeeee 0 10%, transparent 12% 88%, #eeeeee 90% 100%);
-                  width: 50px;
-                  height: 8px;
-                  position: absolute;
-                }
-
-                & .notch-1 { transform: rotate(60deg); }
-                & .notch-2 { transform: rotate(0deg); }
-                & .notch-3 { transform: rotate(-60deg); }
-              }
-
-              & .central-gap {
-                width: 100px;
-                height: 50px;
-                border: 3px solid #9d9d9d;
-                background: rgba(255, 255, 255, 0.8);
-                margin: 0 10px;
-                overflow: hidden;
-                position: relative;
-
-                &::after {
-                  content: "";
-                  display: block;
-                  width: 100%;
-                  height: 100%;
-                  background-image: linear-gradient(transparent, #fff5, transparent);
-                  position: absolute;
-                  top: 0;
-                }
-
-                & .innertape {
-                  width: 150px;
-                  height: 150px;
-                  border-radius: 50%;
-                  background: radial-gradient(#999 45%, #3e3e3e 47% 100%);
-                  border: 3px solid #212121;
-                  position: relative;
-
-                  &.left {
-                    transform: translate(-119px, -52px);
-                  }
-
-                  &.right {
-                    transform: translate(66px, -206px);
-                    box-shadow: -10px -10px 15px #3335;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        & .bottom-label {
-          border-bottom-left-radius: 10px;
-          border-bottom-right-radius: 10px;
-          background: #eee;
-          background-image: linear-gradient(-278deg, #eee, #ccc);
-          height: 32px;
-          display: flex;
-          justify-content: space-around;
-          align-items: center;
-
-          & .brand-text {
-            & .maintext {
-              font-family: "BioRhyme", sans-serif;
-              font-size: 20px;
-              color: #222;
-              transform: translate(18px, 0) scaleX(1.4);
-            }
-
-            & .subtext {
-              font-family: Arial, sans-serif;
-              font-weight: bold;
-              color: #333;
-              font-size: 7px;
-              transform: translateY(-7px);
-            }
-          }
-
-          & .arrow-text {
-            color: #4d7fb4;
-            font-size: 32px;
-            transform: scaleX(1.5) translate(-6px, -3px);
-          }
-
-          & .model-text {
-            font-family: "Code", sans-serif;
-            font-weight: bold;
-            color: #222;
-            font-size: 28px;
-            transform: translate(0, 2px);
-
-            & span {
-              color: #4d7fb4;
-            }
-          }
-        }
-      }
     }
-  }
 
-  & .bottom-tape {
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    &::after {
+        right: calc(calc(var(--width) / 448) * (-5));
+        transform: scaleX(-1);
+        background: var(--dark-color);
+    }
 
-    & .magnetic-shield-container {
-      filter:
-        drop-shadow(-4px 0 2px #13131315)
-        drop-shadow(4px 0 2px #38383815)
-        drop-shadow(0 -4px 2px #20202015);
-
-      & .magnetic-shield {
-        background: linear-gradient(#c1c1c1, #adadad);
-        width: 350px;
-        height: 65px;
-        clip-path: polygon(0 100%, 4% 0, 96% 0, 100% 100%);
+    & .medium-tape {
+        margin-top: 5.5%;
         display: flex;
-        justify-content: space-between;
-        transform: translateY(3px);
+        justify-content: center;
 
-        & .left-hole-container,
-        & .right-hole-container {
-          width: 125px;
-          display: flex;
-          justify-content: space-evenly;
-          align-items: flex-end;
-        }
+        & .label-container {
+            width: 90%;
+            background: var(--dark-color);
+            border-radius: calc(calc(var(--width) / 112) * 3);
+            padding: calc(var(--width) / 100);
 
-        & .hole.hole-2,
-        & .hole.hole-3 {
-          transform: translateY(-15px);
-          width: 24px;
-          height: 18px;
-          border-radius: 30px;
-        }
+            & .label {
+                background: #eee;
+                background-image: repeating-linear-gradient(
+                        transparent 0 calc(var(--width) * 20 / 448),
+                        #c4c4c4 calc(var(--width) * 20 / 448)
+                            calc(var(--width) * 21 / 448)
+                    ),
+                    linear-gradient(278deg, #f3f3f3, #e8e8e8);
+                border-radius: calc(var(--width) / 45);
 
-        & .hole.hole-3 {
-          width: 20px;
-          border-radius: 10px;
-          transform-origin: 50% 50%;
-          transform: rotate(90deg) translateX(-17px);
-        }
+                & .top-label {
+                    height: calc(var(--width) / 7.3);
 
-        & .screw-container {
-          &::before {
-            content: "";
-            display: block;
-            background: rgba(0, 0, 0, 0.75);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            position: relative;
-            top: 10px;
-            z-index: 10;
-          }
-        }
+                    & .top-text {
+                        font-family: "Captions";
+                        font-size: calc(var(--width) / 12);
+                        line-height: 110%;
+                        text-align: center;
+                        transform: translateY(calc(var(--width) / 50));
 
-        & .hole {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: #000000bf;
-          box-shadow: 0 0 0 2px #17171742;
-          transform: translateY(-5px);
+                        & div {
+                            color: #484848;
+                        }
+                    }
+                }
+
+                & .medium-label {
+                    height: calc(var(--width) / 3.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 0 0 calc(var(--width) / 45)
+                        calc(var(--width) / 45);
+
+                    & .gap-container {
+                        width: calc(var(--width) / 1.81);
+                        height: calc(var(--width) / 6);
+                        border: calc(var(--width) / 100) solid #aaa9;
+                        background: var(--dark-color);
+                        background-image: linear-gradient(
+                            76deg,
+                            transparent,
+                            #aaa2
+                        );
+                        border-radius: 3em;
+
+                        & .gap {
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            & .tapereel {
+                                width: calc(var(--width) / 9);
+                                height: calc(var(--width) / 9);
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                border-radius: 50%;
+                                border: calc(var(--width) / 100) solid #eeeeee;
+                                box-shadow: 0 0 0 calc(var(--width) / 120)
+                                    #5a5a5a;
+                                background: radial-gradient(
+                                    #cccfd6 0%,
+                                    #65676d 25%,
+                                    #000000 100%
+                                );
+
+                                &.left {
+                                    animation: spin 6s linear infinite reverse;
+                                }
+
+                                &.right {
+                                    animation: spin 8s linear infinite reverse;
+                                }
+
+                                & .notch {
+                                    background: linear-gradient(
+                                        to right,
+                                        #eeeeee 0 10%,
+                                        transparent 12% 88%,
+                                        #eeeeee 90% 100%
+                                    );
+                                    width: calc(var(--width) / 9);
+                                    height: calc(var(--width) / 50);
+                                    position: absolute;
+                                }
+
+                                & .notch-1 {
+                                    transform: rotate(60deg);
+                                }
+                                & .notch-2 {
+                                    transform: rotate(0deg);
+                                }
+                                & .notch-3 {
+                                    transform: rotate(-60deg);
+                                }
+                            }
+
+                            & .central-gap {
+                                width: calc(var(--width) / 4.5);
+                                height: calc(var(--width) / 9);
+                                border: calc(var(--width) / 100) solid #9d9d9d;
+                                background: rgba(255, 255, 255, 0.8);
+                                margin: 0 calc(var(--width) / 40);
+                                overflow: hidden;
+                                position: relative;
+
+                                &::after {
+                                    content: "";
+                                    display: block;
+                                    width: 100%;
+                                    height: 100%;
+                                    background-image: linear-gradient(
+                                        transparent,
+                                        #fff5,
+                                        transparent
+                                    );
+                                    position: absolute;
+                                    top: 0;
+                                }
+
+                                & .innertape {
+                                    width: calc(var(--width) / 3);
+                                    height: calc(var(--width) / 3);
+                                    border-radius: 50%;
+                                    background: radial-gradient(
+                                        #999 30%,
+                                        #3e3e3e 47% 100%
+                                    );
+                                    border: calc(var(--width) / 150) solid
+                                        #212121;
+                                    position: relative;
+
+                                    &.left {
+                                        transform: translate(-81%, -35%);
+                                    }
+
+                                    &.right {
+                                        transform: translate(42%, -137%);
+                                        box-shadow: -10px -10px 15px #3335;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                & .bottom-label {
+                    border-bottom-left-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                    background: #eee;
+                    background-image: linear-gradient(-278deg, #eee, #ccc);
+                    height: 32px;
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+                }
+            }
         }
-      }
     }
-  }
+
+    & .bottom-tape {
+        height: calc(var(--width) / 5.6);
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+
+        & .magnetic-shield-container {
+            filter: drop-shadow(-4px 0 2px #13131315)
+                drop-shadow(4px 0 2px #38383815)
+                drop-shadow(0 -4px 2px #20202015);
+
+            & .magnetic-shield {
+                background: linear-gradient(#c1c1c1, #adadad);
+                width: calc(var(--width) / 1.3);
+                height: calc(var(--width) / 7);
+                clip-path: polygon(0 100%, 4% 0, 96% 0, 100% 100%);
+                display: flex;
+                justify-content: space-between;
+                transform: translateY(calc(var(--width) / 100));
+                border-radius: calc(var(--width) / 100);
+            }
+        }
+    }
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
 
-  100% {
-    transform: rotate(360deg);
-  }
+    100% {
+        transform: rotate(360deg);
+    }
 }
