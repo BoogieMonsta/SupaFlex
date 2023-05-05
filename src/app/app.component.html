@@ -23,32 +23,16 @@
                     [color]="'green'"
                 ></app-cassette>
 
+                <div>{{ transportState1.current }}</div>
+
                 <!-- Buttons Deck 1 -->
                 <div class="container-deck1 flex flex-row gap-[3px] w-fit z-10">
                     <app-tape-recorder-button
-                        [iconName]="'pause'"
-                        [btnColor]="'gray'"
+                        *ngFor="let btn of srcButtons"
+                        iconName="{{ btn }}"
                         [deckNumber]="1"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'stop'"
-                        [btnColor]="'gray'"
-                        [deckNumber]="1"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'rewind'"
-                        [btnColor]="'gray'"
-                        [deckNumber]="1"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'fast-forward'"
-                        [btnColor]="'gray'"
-                        [deckNumber]="1"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'play'"
-                        [btnColor]="'gray'"
-                        [deckNumber]="1"
+                        (onBtnDown)="onBtnDown($event)"
+                        (onBtnUp)="onBtnUp($event)"
                     ></app-tape-recorder-button>
                 </div>
             </div>
@@ -61,37 +45,16 @@
                     [color]="'blue'"
                 ></app-cassette>
 
+                <div>{{ transportState2.current }}</div>
+
                 <!-- Buttons Deck 2 -->
                 <div class="container-deck2 flex flex-row gap-[3px] w-fit z-10">
                     <app-tape-recorder-button
-                        [iconName]="'pause'"
-                        [btnColor]="'gray'"
+                        *ngFor="let btn of dstButtons"
+                        iconName="{{ btn }}"
                         [deckNumber]="2"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'stop'"
-                        [btnColor]="'gray'"
-                        [deckNumber]="2"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'rewind'"
-                        [btnColor]="'gray'"
-                        [deckNumber]="2"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'fast-forward'"
-                        [btnColor]="'gray'"
-                        [deckNumber]="2"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'play'"
-                        [btnColor]="'gray'"
-                        [deckNumber]="2"
-                    ></app-tape-recorder-button>
-                    <app-tape-recorder-button
-                        [iconName]="'record'"
-                        [btnColor]="'red'"
-                        [deckNumber]="2"
+                        (onBtnDown)="onBtnDown($event)"
+                        (onBtnUp)="onBtnUp($event)"
                     ></app-tape-recorder-button>
                 </div>
             </div>
