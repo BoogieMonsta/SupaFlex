@@ -1,14 +1,6 @@
-# SoundTest
+# PauseTape
 
-This is a template for creating an audio web application powered by Elementary Audio for the sound engine and Angular for the GUI.
-
-## Done for you
-
-* boilerplate implementation of Elementary's WebAudioRenderer and AudioContext
-* a Notes utility object for instant access to any musical note you might want
-* a button acting as a general audio on/off switch
-
-This way you can focus on building your audio app directly.
+PauseTape is a web-based audio application that brings the lost art of creating pause tape beats to the digital realm. Emulating the workflow used by Hip Hop producers of the golden era, PauseTape allows users to control two virtual tape machines with their keyboard.
 
 ## How to build
 
