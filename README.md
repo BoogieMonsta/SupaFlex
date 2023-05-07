@@ -2,7 +2,13 @@
 
 PauseTape is a web-based audio application that brings the lost art of creating pause tape beats to the digital realm. Emulating the workflow used by Hip Hop producers of the golden era, PauseTape allows users to control two virtual tape machines with their keyboard.
 
+<img width="1133" alt="Screenshot 2023-05-07 at 16 09 48" src="https://user-images.githubusercontent.com/73052877/236682671-6e733bad-99bc-4ad6-ae53-b0600f41e8e8.png">
+
 ## TODO
+
+### GUI
+
+- [ ]  Complete the interface as a modern custom tape recorder
 
 ### Transport & Recording
 
