@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { el } from '@elemaudio/core';
 import WebRenderer from '@elemaudio/web-renderer';
-import { Notes } from './notes/notes';
 import { Transport, TransportState } from './models/AudioTransport';
 import { AudioTransportService } from './audio-transport.service';
+import { Tape } from './models/Tape';
+import { Deck } from './models/Deck';
 
 const core = new WebRenderer();
 let ctx = new AudioContext();
-const OFF = el.const({ value: 0 });
+let audioBuffer: AudioBuffer;
 
 @Component({
     selector: 'app-root',
@@ -17,16 +18,41 @@ const OFF = el.const({ value: 0 });
 export class AppComponent implements OnInit {
     srcButtons: string[] = [];
     dstButtons: string[] = [];
-    transportState1 = {
-        previous: TransportState.Stopped,
-        current: TransportState.Stopped,
+    deck1: Deck = {
+        previousState: TransportState.Stopped,
+        currentState: TransportState.Stopped,
     };
-    transportState2 = {
-        previous: TransportState.Stopped,
-        current: TransportState.Stopped,
+    deck2: Deck = {
+        previousState: TransportState.Stopped,
+        currentState: TransportState.Stopped,
     };
     title = 'PauseTape';
-    isAudioOn = false;
+
+    isOn = false;
+    // TODO do something interesting with this
+    // continuous pitch & speed modulation
+    // playbackRate = el.add(1, el.cycle(1));
+
+    sourceTape: Tape = {
+        name: 'Drangie',
+        L: null,
+        R: null,
+        path_L: '',
+        path_R: '',
+        playbackRate: null,
+        isPlaying: false,
+        playing: null,
+    };
+    destTape: Tape = {
+        name: 'Chops',
+        L: null,
+        R: null,
+        path_L: '',
+        path_R: '',
+        playbackRate: null,
+        isPlaying: false,
+        playing: null,
+    };
 
     constructor(private transportService: AudioTransportService) {}
 
@@ -35,154 +61,114 @@ export class AppComponent implements OnInit {
         this.srcButtons.pop();
         this.dstButtons = Object.values(Transport);
 
-        core.on('load', () => {
+        core.on('load', async () => {
             core.on('error', (e: any) => {
+                console.log(e);
+            });
+
+            this.initTapes();
+
+            // TODO implement with el.snapshot()
+            core.on('snapshot', (e: any) => {
                 console.log(e);
             });
         });
         await this.main();
     }
 
+    initTapes() {
+        this.initTape(this.sourceTape);
+        this.initTape(this.destTape);
+    }
+
+    initTape(tape: Tape) {
+        tape.path_L = tape.name.toLowerCase() + '_L';
+        tape.path_R = tape.name.toLowerCase() + '_R';
+        tape.playbackRate = el.const({ key: 'speed', value: 0 });
+        tape.playing = el.const({ key: 'playing', value: 0 });
+
+        tape.L = el.sample(
+            { key: tape.path_L, path: tape.path_L },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+        tape.R = el.sample(
+            { key: tape.path_R, path: tape.path_R },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+    }
+
     onBtnDown(btnData: any) {
-        if (btnData.deckNumber === 1) {
-            switch (btnData.name) {
-                case Transport.Pause:
-                    if (
-                        this.transportState1.current !== TransportState.Paused
-                    ) {
-                        this.transportState1.previous =
-                            this.transportState1.current;
-                        this.transportState1.current = TransportState.Paused;
-                    }
-                    break;
-                case Transport.Stop:
-                    if (
-                        this.transportState1.current !== TransportState.Stopped
-                    ) {
-                        this.transportState1.previous =
-                            this.transportState1.current;
-                        this.transportState1.current = TransportState.Stopped;
-                    }
-                    break;
-                case Transport.Rewind:
-                    if (
-                        this.transportState1.current !==
-                        TransportState.Rewinding
-                    ) {
-                        this.transportState1.previous =
-                            this.transportState1.current;
-                        this.transportState1.current = TransportState.Rewinding;
-                    }
-                    break;
-                case Transport.FastForward:
-                    if (
-                        this.transportState1.current !==
-                        TransportState.FastForwarding
-                    ) {
-                        this.transportState1.previous =
-                            this.transportState1.current;
-                        this.transportState1.current =
-                            TransportState.FastForwarding;
-                    }
-                    break;
-                case Transport.Play:
-                    if (
-                        this.transportState1.current !== TransportState.Playing
-                    ) {
-                        this.transportState1.previous =
-                            this.transportState1.current;
-                        this.transportState1.current = TransportState.Playing;
-                    }
-                    break;
-            }
-        } else if (btnData.deckNumber === 2) {
-            switch (btnData.name) {
-                case Transport.Pause:
-                    if (
-                        this.transportState2.current !== TransportState.Paused
-                    ) {
-                        this.transportState2.previous =
-                            this.transportState2.current;
-                        this.transportState2.current = TransportState.Paused;
-                    }
-                    break;
-                case Transport.Stop:
-                    if (
-                        this.transportState2.current !== TransportState.Stopped
-                    ) {
-                        this.transportState2.previous =
-                            this.transportState2.current;
-                        this.transportState2.current = TransportState.Stopped;
-                    }
-                    break;
-                case Transport.Rewind:
-                    if (
-                        this.transportState2.current !==
-                        TransportState.Rewinding
-                    ) {
-                        this.transportState2.previous =
-                            this.transportState2.current;
-                        this.transportState2.current = TransportState.Rewinding;
-                    }
-                    break;
-                case Transport.FastForward:
-                    if (
-                        this.transportState2.current !==
-                        TransportState.FastForwarding
-                    ) {
-                        this.transportState2.previous =
-                            this.transportState2.current;
-                        this.transportState2.current =
-                            TransportState.FastForwarding;
-                    }
-                    break;
-                case Transport.Play:
-                    if (
-                        this.transportState2.current !==
-                            TransportState.Playing &&
-                        this.transportState2.current !==
-                            TransportState.Recording
-                    ) {
-                        this.transportState2.previous =
-                            this.transportState2.current;
-                        this.transportState2.current = TransportState.Playing;
-                    }
-                    break;
-                case Transport.Record:
-                    if (
-                        this.transportState2.current !==
-                        TransportState.Recording
-                    ) {
-                        this.transportState2.previous =
-                            this.transportState2.current;
-                        this.transportState2.current = TransportState.Recording;
-                    }
-                    break;
-            }
+        if (btnData.deckNumber !== 1 && btnData.deckNumber !== 2) {
+            console.error('Invalid deck number', btnData.deckNumber);
+            return;
+        }
+        const tape = btnData.deckNumber === 1 ? this.sourceTape : this.destTape;
+        const deck = btnData.deckNumber === 1 ? this.deck1 : this.deck2;
+        switch (btnData.name) {
+            case Transport.Pause:
+                if (deck.currentState !== TransportState.Paused) {
+                    deck.previousState = deck.currentState;
+                    deck.currentState = TransportState.Paused;
+                    this.pause(tape);
+                }
+                break;
+            case Transport.Stop:
+                if (deck.currentState !== TransportState.Stopped) {
+                    deck.previousState = deck.currentState;
+                    deck.currentState = TransportState.Stopped;
+                    this.stop(tape);
+                }
+                break;
+            case Transport.Rewind:
+                if (deck.currentState !== TransportState.Rewinding) {
+                    deck.previousState = deck.currentState;
+                    deck.currentState = TransportState.Rewinding;
+                    this.rewind(tape);
+                }
+                break;
+            case Transport.FastForward:
+                if (deck.currentState !== TransportState.FastForwarding) {
+                    deck.previousState = deck.currentState;
+                    deck.currentState = TransportState.FastForwarding;
+                    this.fastForward(tape);
+                }
+                break;
+            case Transport.Play:
+                if (deck.currentState !== TransportState.Playing) {
+                    deck.previousState = deck.currentState;
+                    deck.currentState = TransportState.Playing;
+                    this.play(tape);
+                }
+                break;
+            case Transport.Record:
+                if (deck.currentState !== TransportState.Recording) {
+                    deck.previousState = deck.currentState;
+                    deck.currentState = TransportState.Recording;
+                    // TODO implement recording
+                }
+                break;
         }
     }
 
     onBtnUp(btnData: any) {
-        if (btnData.deckNumber === 1) {
-            if (
-                btnData.name === Transport.Pause ||
+        if (btnData.deckNumber !== 1 && btnData.deckNumber !== 2) {
+            console.error('Invalid deck number', btnData.deckNumber);
+            return;
+        }
+        const tape = btnData.deckNumber === 1 ? this.sourceTape : this.destTape;
+        const deck = btnData.deckNumber === 1 ? this.deck1 : this.deck2;
+        if (
+            (btnData.name === Transport.Pause ||
                 btnData.name === Transport.Rewind ||
-                btnData.name === Transport.FastForward
-            ) {
-                this.transportState1.current = this.transportState1.previous;
-            } else if (btnData.name === Transport.Stop) {
-                this.transportService.deck1StopSubject.next(true);
-            }
-        } else if (btnData.deckNumber === 2) {
-            if (
-                btnData.name === Transport.Pause ||
-                btnData.name === Transport.Rewind ||
-                btnData.name === Transport.FastForward
-            ) {
-                this.transportState2.current = this.transportState2.previous;
-            } else if (btnData.name === Transport.Stop) {
-                this.transportService.deck2StopSubject.next(true);
-            }
+                btnData.name === Transport.FastForward) &&
+            tape.isPlaying
+        ) {
+            deck.currentState = deck.previousState;
+            this.play(tape);
+        } else if (btnData.name === Transport.Stop) {
+            this.transportService.emitStopSubject(btnData.deckNumber);
         }
     }
 
@@ -195,24 +181,129 @@ export class AppComponent implements OnInit {
         node.connect(ctx.destination);
     }
 
-    toggleAudioOnOff() {
-        ctx.resume();
-        if (this.isAudioOn) {
-            this.turnAudioOff();
+    async fetchAndDecodeAudio(tape: Tape) {
+        const response = await fetch(
+            `assets/samples/${tape.name.toLowerCase()}.mp3`
+        );
+        const arrayBuffer = await response.arrayBuffer();
+        audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+
+        const sampleBufferL = audioBuffer.getChannelData(0);
+        const sampleBufferR = audioBuffer.getChannelData(1);
+
+        core.updateVirtualFileSystem({
+            [tape.path_L]: sampleBufferL,
+            [tape.path_R]: sampleBufferR,
+        });
+    }
+
+    async toggleAudioOnOff() {
+        if (this.isOn) {
+            await ctx.suspend();
+            this.isOn = false;
         } else {
-            this.playSound();
+            await ctx.resume();
+            this.isOn = true;
+            await this.fetchAndDecodeAudio(this.sourceTape);
+            await this.fetchAndDecodeAudio(this.destTape);
         }
     }
 
-    turnAudioOff() {
-        core.render(OFF, OFF);
-        this.isAudioOn = false;
+    stop(tape: Tape) {
+        this.pause(tape);
+        tape.isPlaying = false;
     }
 
-    playSound() {
-        let leftChannel = Notes.C4;
-        let rightChannel = Notes.C3;
-        core.render(leftChannel, rightChannel);
-        this.isAudioOn = true;
+    pause(tape: Tape) {
+        if (tape.path_L === null || tape.path_R === null) {
+            console.error('Invalid tape', tape);
+            return;
+        }
+
+        tape.playing = el.const({ key: 'playing', value: 1 });
+        tape.playbackRate = el.const({ key: 'speed', value: 0 });
+
+        tape.L = el.sample(
+            { key: tape.path_L, path: tape.path_L },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+        tape.R = el.sample(
+            { key: tape.path_R, path: tape.path_R },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+        core.render(tape.L, tape.R);
+    }
+
+    async play(tape: Tape) {
+        if (!this.isOn) {
+            await this.toggleAudioOnOff();
+        }
+        if (tape.path_L === null || tape.path_R === null) {
+            console.error('Invalid tape', tape);
+            return;
+        }
+
+        tape.playing = el.const({ key: 'playing', value: 1 });
+        tape.playbackRate = el.const({ key: 'speed', value: 1 });
+
+        tape.L = el.sample(
+            { key: tape.path_L, path: tape.path_L },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+        tape.R = el.sample(
+            { key: tape.path_R, path: tape.path_R },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+
+        core.render(tape.L, tape.R);
+        tape.isPlaying = true;
+    }
+
+    fastForward(tape: Tape) {
+        if (tape.path_L === null || tape.path_R === null) {
+            console.error('Invalid tape', tape);
+            return;
+        }
+
+        tape.playbackRate = el.const({ key: 'speed', value: 2 });
+
+        tape.L = el.sample(
+            { key: tape.path_L, path: tape.path_L },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+        tape.R = el.sample(
+            { key: tape.path_R, path: tape.path_R },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+
+        core.render(tape.L, tape.R);
+    }
+
+    rewind(tape: Tape) {
+        if (tape.path_L === null || tape.path_R === null) {
+            console.error('Invalid tape', tape);
+            return;
+        }
+
+        tape.playbackRate = el.const({ key: 'speed', value: -2 });
+
+        tape.L = el.sample(
+            { key: tape.path_L, path: tape.path_L },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+        tape.R = el.sample(
+            { key: tape.path_R, path: tape.path_R },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+
+        core.render(tape.L, tape.R);
     }
 }

@@ -15,5 +15,13 @@ export class AudioTransportService implements OnInit {
 
   ngOnInit(): void {
   }
+
+  emitStopSubject(deck: number) {
+    if (deck === 1) {
+      this.deck1StopSubject.next(true);
+    } else if (deck === 2) {
+      this.deck2StopSubject.next(true);
+    }
+  }
   
 }
