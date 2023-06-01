@@ -8,20 +8,22 @@ PauseTape is a web-based audio application that brings the lost art of creating 
 
 ### GUI
 
-- [ ]  Complete the interface as a modern custom tape recorder
+- [ ]  Complete the interface in the style of the cassettes & buttons
 
 ### Transport & Recording
 
 - [ ]  connect buttons to the spinning rotors
 - [ ]  Deck1: add audio sample
 - [ ]  Deck2: record audio from Deck1
-- [ ]  “Tight / Sloppy” variable control (adds ramp to any transport changes)
+- [ ]  “Tight / Sloppy” variable control (smooth out any transport changes)
 - [ ]  Time code monitor for each deck
-- [ ]  FF & REW: heard if PLAYING, not heard if STOPPED
+- [ ]  make FF & REW not heard & ultra fast if STOPPED
 
 ### Audio Visualization
 
 - [ ]  Display audio waveform for decks 1 & 2
+- [ ]  Display audio waveform for mix bus
+- [ ]  Allow selection & export of mix bus waveform
 
 ### Effects
 
@@ -30,10 +32,6 @@ Variable controls
 - [ ]  Close / Far (filters, reverb, saturation)
 - [ ]  Hard / Soft (compression, saturation)
 - [ ]  HiFi / LoFi (filters, saturation)
-
-## FIXME
-
-- [ ] when pressing FF and REW at the same time while playing, TransportState gets stuck on FastForward
 
 ## How to build
 

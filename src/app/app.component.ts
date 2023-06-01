@@ -21,12 +21,10 @@ export class AppComponent implements OnInit {
 
     isOn = false;
     deck1: Deck = {
-        previousState: TransportState.Stopped,
-        currentState: TransportState.Stopped,
+        state: TransportState.Stopped,
     };
     deck2: Deck = {
-        previousState: TransportState.Stopped,
-        currentState: TransportState.Stopped,
+        state: TransportState.Stopped,
     };
     // TODO do something interesting with this
     // continuous pitch & speed modulation
@@ -141,44 +139,38 @@ export class AppComponent implements OnInit {
 
         switch (btnData.name) {
             case Transport.Pause:
-                if (deck.currentState !== TransportState.Paused) {
-                    deck.previousState = deck.currentState;
-                    deck.currentState = TransportState.Paused;
+                if (deck.state !== TransportState.Paused) {
+                    deck.state = TransportState.Paused;
                     this.pause(tape);
                 }
                 break;
             case Transport.Stop:
-                if (deck.currentState !== TransportState.Stopped) {
-                    deck.previousState = deck.currentState;
-                    deck.currentState = TransportState.Stopped;
+                if (deck.state !== TransportState.Stopped) {
+                    deck.state = TransportState.Stopped;
                     this.stop(tape);
                 }
                 break;
             case Transport.Rewind:
-                if (deck.currentState !== TransportState.Rewinding) {
-                    deck.previousState = deck.currentState;
-                    deck.currentState = TransportState.Rewinding;
+                if (deck.state !== TransportState.Rewinding) {
+                    deck.state = TransportState.Rewinding;
                     this.rewind(tape);
                 }
                 break;
             case Transport.FastForward:
-                if (deck.currentState !== TransportState.FastForwarding) {
-                    deck.previousState = deck.currentState;
-                    deck.currentState = TransportState.FastForwarding;
+                if (deck.state !== TransportState.FastForwarding) {
+                    deck.state = TransportState.FastForwarding;
                     this.fastForward(tape);
                 }
                 break;
             case Transport.Play:
-                if (deck.currentState !== TransportState.Playing) {
-                    deck.previousState = deck.currentState;
-                    deck.currentState = TransportState.Playing;
+                if (deck.state !== TransportState.Playing) {
+                    deck.state = TransportState.Playing;
                     this.play(tape);
                 }
                 break;
             case Transport.Record:
-                if (deck.currentState !== TransportState.Recording) {
-                    deck.previousState = deck.currentState;
-                    deck.currentState = TransportState.Recording;
+                if (deck.state !== TransportState.Recording) {
+                    deck.state = TransportState.Recording;
                     // TODO implement recording
                 }
                 break;
@@ -198,7 +190,7 @@ export class AppComponent implements OnInit {
                 btnData.name === Transport.FastForward) &&
             tape.isPlaying
         ) {
-            deck.currentState = deck.previousState;
+            deck.state = TransportState.Playing;
             this.play(tape);
         } else if (btnData.name === Transport.Stop) {
             this.transportService.emitStopSubject(btnData.deckNumber);

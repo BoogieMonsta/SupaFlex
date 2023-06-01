@@ -1,6 +1,5 @@
-import { TransportState } from "./AudioTransport";
+import { TransportState } from './AudioTransport';
 
 export interface Deck {
-    previousState: TransportState;
-    currentState: TransportState;
+    state: TransportState;
 }
