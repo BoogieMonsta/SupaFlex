@@ -18,7 +18,7 @@ let audioBuffer: AudioBuffer;
 export class AppComponent implements OnInit {
     srcButtons: string[] = [];
     dstButtons: string[] = [];
-    
+
     isOn = false;
     deck1: Deck = {
         previousState: TransportState.Stopped,
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
         playing: null,
     };
     destTape: Tape = {
-        name: 'Chops',
+        name: 'Strums',
         L: null,
         R: null,
         path_L: '',
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit {
     private _playbackSpeed1 = 1;
     set playbackSpeed1(speed: number) {
         this._playbackSpeed1 = speed;
-        this.refreshPlaybackSpeed(this.sourceTape, 1);
+        this.refreshPlaybackSpeed(this.sourceTape, speed);
     }
     get playbackSpeed1() {
         return this._playbackSpeed1;
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
     private _playbackSpeed2 = 1;
     set playbackSpeed2(speed: number) {
         this._playbackSpeed2 = speed;
-        this.refreshPlaybackSpeed(this.destTape, 2);
+        this.refreshPlaybackSpeed(this.destTape, speed);
     }
     get playbackSpeed2() {
         return this._playbackSpeed2;
@@ -286,7 +286,7 @@ export class AppComponent implements OnInit {
     }
 
     private setPlaying(tape: Tape, value: boolean) {
-        tape.isPlaying = true;
+        tape.isPlaying = value;
         tape.playing = el.const({
             key: `${tape.name.toLowerCase()}-playing`,
             value: Number(value),
@@ -350,17 +350,13 @@ export class AppComponent implements OnInit {
             this.destTape.R
         );
 
-        core.render(this.mixTape.L, this.mixTape.R);
+        if (play) {
+            core.render(this.mixTape.L, this.mixTape.R);
+        }
     }
 
-    refreshPlaybackSpeed(tape: Tape, deckNumber: number) {
-        if (deckNumber !== 1 && deckNumber !== 2) {
-            console.error('Invalid deck number', deckNumber);
-            return;
-        }
-
-        tape.playbackSpeed =
-            deckNumber === 1 ? this.playbackSpeed1 : this.playbackSpeed2;
+    refreshPlaybackSpeed(tape: Tape, speed: number) {
+        tape.playbackSpeed = speed;
         this.setPlaybackRate(tape);
 
         tape.L = el.sample(
