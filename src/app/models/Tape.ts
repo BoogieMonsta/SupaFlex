@@ -8,4 +8,5 @@ export interface Tape {
     playbackRate: any; // reflects playbackSpeed as an elementary audio node
     isPlaying: boolean;
     playing: any; // reflects isPlaying as an elementary audio node
+    sloppiness: number;
 }

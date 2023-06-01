@@ -40,6 +40,7 @@ export class AppComponent implements OnInit {
         playbackRate: null,
         isPlaying: false,
         playing: null,
+        sloppiness: 0.03,
     };
     destTape: Tape = {
         name: 'Strums',
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit {
         playbackRate: null,
         isPlaying: false,
         playing: null,
+        sloppiness: 0.03,
     };
     mixTape: Tape = {
         name: 'Mix',
@@ -62,6 +64,7 @@ export class AppComponent implements OnInit {
         playbackRate: null,
         isPlaying: false,
         playing: null,
+        sloppiness: 0,
     };
 
     private _playbackSpeed1 = 1;
@@ -80,6 +83,24 @@ export class AppComponent implements OnInit {
     }
     get playbackSpeed2() {
         return this._playbackSpeed2;
+    }
+
+    private _sloppiness1 = 0.03;
+    set sloppiness1(sloppiness: number) {
+        this._sloppiness1 = sloppiness;
+        this.refreshSloppiness(this.sourceTape, sloppiness);
+    }
+    get sloppiness1() {
+        return this._sloppiness1;
+    }
+
+    private _sloppiness2 = 0.03;
+    set sloppiness2(sloppiness: number) {
+        this._sloppiness2 = sloppiness;
+        this.refreshSloppiness(this.destTape, sloppiness);
+    }
+    get sloppiness2() {
+        return this._sloppiness2;
     }
 
     constructor(private transportService: AudioTransportService) {}
@@ -243,10 +264,13 @@ export class AppComponent implements OnInit {
     }
 
     private setPlaybackRate(tape: Tape, factor = 1) {
-        tape.playbackRate = el.const({
-            key: `${tape.name.toLowerCase()}-speed`,
-            value: tape.playbackSpeed * factor,
-        });
+        tape.playbackRate = el.smooth(
+            el.tau2pole(tape.sloppiness),
+            el.const({
+                key: `${tape.name.toLowerCase()}-speed`,
+                value: tape.playbackSpeed * factor,
+            })
+        );
     }
 
     stop(tape: Tape) {
@@ -349,6 +373,24 @@ export class AppComponent implements OnInit {
 
     refreshPlaybackSpeed(tape: Tape, speed: number) {
         tape.playbackSpeed = speed;
+        this.setPlaybackRate(tape);
+
+        tape.L = el.sample(
+            { key: tape.path_L, path: tape.path_L },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+        tape.R = el.sample(
+            { key: tape.path_R, path: tape.path_R },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+
+        this.renderMixBus();
+    }
+
+    refreshSloppiness(tape: Tape, slopiness: number) {
+        tape.sloppiness = slopiness;
         this.setPlaybackRate(tape);
 
         tape.L = el.sample(
