@@ -103,6 +103,8 @@ export class AppComponent implements OnInit {
         return this._sloppiness2;
     }
 
+    mixWaveform: any[] = [];
+
     constructor(private transportService: AudioTransportService) {}
 
     async ngOnInit() {
@@ -117,9 +119,12 @@ export class AppComponent implements OnInit {
 
             this.initTapes();
 
-            // TODO implement with el.snapshot()
-            core.on('snapshot', (e: any) => {
-                console.log(e);
+            core.on('scope', (e) => {
+                if (e.source === 'mix_L') {
+                    this.mixWaveform = e.data;
+                }
+                if (e.source === 'mix_R') {
+                }
             });
         });
         await this.main();
@@ -372,7 +377,10 @@ export class AppComponent implements OnInit {
         );
 
         if (play) {
-            core.render(this.mixTape.L, this.mixTape.R);
+            core.render(
+                el.scope({ name: 'mix_L' }, this.mixTape.L),
+                el.scope({ name: 'mix_R' }, this.mixTape.R)
+            );
         }
     }
 

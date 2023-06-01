@@ -155,5 +155,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- Mixbus Monitor -->
+        <app-mixbus-monitor
+            [isPlaying]="deck1.state === 'playing' || deck2.state === 'playing'"
+            [waveformBuffer]="mixWaveform"
+        ></app-mixbus-monitor>
     </div>
 </div>
