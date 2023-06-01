@@ -22,3 +22,8 @@ $gap: 3px;
 .container-deck2:before {
     width: $btn-width * $deck2-btn-count + $gap * ($deck2-btn-count - 1);
 }
+
+#speed-control-1, #speed-control-2 {
+    appearance: slider-vertical;
+    // writing-mode: bt-lr;
+}

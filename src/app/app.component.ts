@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
         R: null,
         path_L: '',
         path_R: '',
+        playbackSpeed: 1,
         playbackRate: null,
         isPlaying: false,
         playing: null,
@@ -49,12 +50,33 @@ export class AppComponent implements OnInit {
         R: null,
         path_L: '',
         path_R: '',
+        playbackSpeed: 1,
         playbackRate: null,
         isPlaying: false,
         playing: null,
     };
 
+    private _playbackSpeed1 = 1;
+    set playbackSpeed1(speed: number) {
+        this._playbackSpeed1 = speed;
+        this.refreshPlaybackRate(this.sourceTape, 1);
+    }
+    get playbackSpeed1() {
+        return this._playbackSpeed1;
+    }
+
+    private _playbackSpeed2 = 1;
+    set playbackSpeed2(speed: number) {
+        this._playbackSpeed2 = speed;
+        this.refreshPlaybackRate(this.destTape, 2);
+    }
+    get playbackSpeed2() {
+        return this._playbackSpeed2;
+    }
+
     constructor(private transportService: AudioTransportService) {}
+
+    
 
     async ngOnInit() {
         this.srcButtons = Object.values(Transport);
@@ -246,7 +268,7 @@ export class AppComponent implements OnInit {
         }
 
         tape.playing = el.const({ key: 'playing', value: 1 });
-        tape.playbackRate = el.const({ key: 'speed', value: 1 });
+        tape.playbackRate = el.const({ key: 'speed', value: this.playbackSpeed1 });
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -269,7 +291,7 @@ export class AppComponent implements OnInit {
             return;
         }
 
-        tape.playbackRate = el.const({ key: 'speed', value: 2 });
+        tape.playbackRate = el.const({ key: 'speed', value: 2 * this.playbackSpeed1 });
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -291,7 +313,30 @@ export class AppComponent implements OnInit {
             return;
         }
 
-        tape.playbackRate = el.const({ key: 'speed', value: -2 });
+        tape.playbackRate = el.const({ key: 'speed', value: -2 * this.playbackSpeed1 });
+
+        tape.L = el.sample(
+            { key: tape.path_L, path: tape.path_L },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+        tape.R = el.sample(
+            { key: tape.path_R, path: tape.path_R },
+            tape.playing, // trigger (1 = one-shot)
+            tape.playbackRate
+        );
+
+        core.render(tape.L, tape.R);
+    }
+
+    refreshPlaybackRate(tape: Tape, deckNumber: number) {
+        if (deckNumber !== 1 && deckNumber !== 2) {
+            console.error('Invalid deck number', deckNumber);
+            return;
+        }
+        
+        tape.playbackSpeed = deckNumber === 1 ? this.playbackSpeed1 : this.playbackSpeed2;
+        tape.playbackRate = el.const({ key: 'speed', value: tape.playbackSpeed });
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
