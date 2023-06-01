@@ -39,7 +39,7 @@
 
             <!-- Speed Control -->
             <div class="flex flex-col items-center">
-                <div>
+                <div class="flex">
                     <input
                         type="range"
                         id="speed-control-1"
@@ -52,6 +52,15 @@
                         class="h-[340px] w-20"
                         [(ngModel)]="playbackSpeed1"
                     />
+                    <div class="flex flex-col items-center justify-between font-bebas-neue text-2xl text-gray-400">
+                        <div>3</div>
+                        <div>2</div>
+                        <div>1</div>
+                        <div>0</div>
+                        <div>-1</div>
+                        <div>-2</div>
+                        <div>-3</div>
+                    </div>
                     <input
                         type="range"
                         id="speed-control-2"
@@ -75,7 +84,7 @@
                         <option value="3"></option>
                     </datalist>
                 </div>
-                <div>PLAYBACK SPEED</div>
+                <div class="mt-5 font-bebas-neue text-gray-400">PLAYBACK SPEED</div>
             </div>
 
             <!-- Deck 2 -->
