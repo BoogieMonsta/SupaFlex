@@ -9,13 +9,12 @@ PauseTape is a web-based audio application that brings the lost art of creating 
 ### GUI
 
 - [ ]  Complete the interface in the style of the cassettes & buttons
+- [ ]  connect buttons to the spinning rotors
 
 ### Transport & Recording
 
-- [ ]  connect buttons to the spinning rotors
 - [ ]  Deck1: add audio sample
 - [ ]  Deck2: record audio from Deck1
-- [ ]  “Tight / Sloppy” variable control (smooth out any transport changes)
 - [ ]  Time code monitor for each deck
 - [ ]  make FF & REW not heard & ultra fast if STOPPED
 
@@ -23,7 +22,7 @@ PauseTape is a web-based audio application that brings the lost art of creating 
 
 - [ ]  Display audio waveform for decks 1 & 2
 - [ ]  Display audio waveform for mix bus
-- [ ]  Allow selection & export of mix bus waveform
+- [ ]  Allow selection & export on mix bus waveform
 
 ### Effects
 
