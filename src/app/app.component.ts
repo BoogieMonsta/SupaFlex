@@ -18,6 +18,8 @@ let audioBuffer: AudioBuffer;
 export class AppComponent implements OnInit {
     srcButtons: string[] = [];
     dstButtons: string[] = [];
+    
+    isOn = false;
     deck1: Deck = {
         previousState: TransportState.Stopped,
         currentState: TransportState.Stopped,
@@ -26,9 +28,6 @@ export class AppComponent implements OnInit {
         previousState: TransportState.Stopped,
         currentState: TransportState.Stopped,
     };
-    title = 'PauseTape';
-
-    isOn = false;
     // TODO do something interesting with this
     // continuous pitch & speed modulation
     // playbackRate = el.add(1, el.cycle(1));
@@ -55,11 +54,22 @@ export class AppComponent implements OnInit {
         isPlaying: false,
         playing: null,
     };
+    mixTape: Tape = {
+        name: 'Mix',
+        L: null,
+        R: null,
+        path_L: '',
+        path_R: '',
+        playbackSpeed: 1,
+        playbackRate: null,
+        isPlaying: false,
+        playing: null,
+    };
 
     private _playbackSpeed1 = 1;
     set playbackSpeed1(speed: number) {
         this._playbackSpeed1 = speed;
-        this.refreshPlaybackRate(this.sourceTape, 1);
+        this.refreshPlaybackSpeed(this.sourceTape, 1);
     }
     get playbackSpeed1() {
         return this._playbackSpeed1;
@@ -68,7 +78,7 @@ export class AppComponent implements OnInit {
     private _playbackSpeed2 = 1;
     set playbackSpeed2(speed: number) {
         this._playbackSpeed2 = speed;
-        this.refreshPlaybackRate(this.destTape, 2);
+        this.refreshPlaybackSpeed(this.destTape, 2);
     }
     get playbackSpeed2() {
         return this._playbackSpeed2;
@@ -76,11 +86,9 @@ export class AppComponent implements OnInit {
 
     constructor(private transportService: AudioTransportService) {}
 
-    
-
     async ngOnInit() {
         this.srcButtons = Object.values(Transport);
-        this.srcButtons.pop();
+        this.srcButtons.pop(); // no rec btn on source deck
         this.dstButtons = Object.values(Transport);
 
         core.on('load', async () => {
@@ -101,13 +109,14 @@ export class AppComponent implements OnInit {
     initTapes() {
         this.initTape(this.sourceTape);
         this.initTape(this.destTape);
+        this.initTape(this.mixTape);
     }
 
     initTape(tape: Tape) {
         tape.path_L = tape.name.toLowerCase() + '_L';
         tape.path_R = tape.name.toLowerCase() + '_R';
-        tape.playbackRate = el.const({ key: 'speed', value: 0 });
-        tape.playing = el.const({ key: 'playing', value: 0 });
+        this.setPlaying(tape, false);
+        this.setPlaybackRate(tape, 0);
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -126,8 +135,10 @@ export class AppComponent implements OnInit {
             console.error('Invalid deck number', btnData.deckNumber);
             return;
         }
+
         const tape = btnData.deckNumber === 1 ? this.sourceTape : this.destTape;
         const deck = btnData.deckNumber === 1 ? this.deck1 : this.deck2;
+
         switch (btnData.name) {
             case Transport.Pause:
                 if (deck.currentState !== TransportState.Paused) {
@@ -237,13 +248,7 @@ export class AppComponent implements OnInit {
     }
 
     pause(tape: Tape) {
-        if (tape.path_L === null || tape.path_R === null) {
-            console.error('Invalid tape', tape);
-            return;
-        }
-
-        tape.playing = el.const({ key: 'playing', value: 1 });
-        tape.playbackRate = el.const({ key: 'speed', value: 0 });
+        this.setPlaybackRate(tape, 0);
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -255,20 +260,16 @@ export class AppComponent implements OnInit {
             tape.playing, // trigger (1 = one-shot)
             tape.playbackRate
         );
-        core.render(tape.L, tape.R);
+        this.renderMixBus();
     }
 
     async play(tape: Tape) {
         if (!this.isOn) {
             await this.toggleAudioOnOff();
         }
-        if (tape.path_L === null || tape.path_R === null) {
-            console.error('Invalid tape', tape);
-            return;
-        }
 
-        tape.playing = el.const({ key: 'playing', value: 1 });
-        tape.playbackRate = el.const({ key: 'speed', value: this.playbackSpeed1 });
+        this.setPlaying(tape, true);
+        this.setPlaybackRate(tape);
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -281,17 +282,26 @@ export class AppComponent implements OnInit {
             tape.playbackRate
         );
 
-        core.render(tape.L, tape.R);
+        this.renderMixBus();
+    }
+
+    private setPlaying(tape: Tape, value: boolean) {
         tape.isPlaying = true;
+        tape.playing = el.const({
+            key: `${tape.name.toLowerCase()}-playing`,
+            value: Number(value),
+        });
+    }
+
+    private setPlaybackRate(tape: Tape, factor = 1) {
+        tape.playbackRate = el.const({
+            key: `${tape.name.toLowerCase()}-speed`,
+            value: tape.playbackSpeed * factor,
+        });
     }
 
     fastForward(tape: Tape) {
-        if (tape.path_L === null || tape.path_R === null) {
-            console.error('Invalid tape', tape);
-            return;
-        }
-
-        tape.playbackRate = el.const({ key: 'speed', value: 2 * this.playbackSpeed1 });
+        this.setPlaybackRate(tape, 2);
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -304,16 +314,11 @@ export class AppComponent implements OnInit {
             tape.playbackRate
         );
 
-        core.render(tape.L, tape.R);
+        this.renderMixBus();
     }
 
     rewind(tape: Tape) {
-        if (tape.path_L === null || tape.path_R === null) {
-            console.error('Invalid tape', tape);
-            return;
-        }
-
-        tape.playbackRate = el.const({ key: 'speed', value: -2 * this.playbackSpeed1 });
+        this.setPlaybackRate(tape, -2);
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -326,17 +331,37 @@ export class AppComponent implements OnInit {
             tape.playbackRate
         );
 
-        core.render(tape.L, tape.R);
+        this.renderMixBus();
     }
 
-    refreshPlaybackRate(tape: Tape, deckNumber: number) {
+    private renderMixBus() {
+        const play = this.sourceTape.isPlaying || this.destTape.isPlaying;
+        this.setPlaying(this.mixTape, play);
+        this.setPlaybackRate(this.mixTape, Number(play));
+
+        this.mixTape.L = el.add(
+            { key: 'mix_L' },
+            this.sourceTape.L,
+            this.destTape.L
+        );
+        this.mixTape.R = el.add(
+            { key: 'mix_R' },
+            this.sourceTape.R,
+            this.destTape.R
+        );
+
+        core.render(this.mixTape.L, this.mixTape.R);
+    }
+
+    refreshPlaybackSpeed(tape: Tape, deckNumber: number) {
         if (deckNumber !== 1 && deckNumber !== 2) {
             console.error('Invalid deck number', deckNumber);
             return;
         }
-        
-        tape.playbackSpeed = deckNumber === 1 ? this.playbackSpeed1 : this.playbackSpeed2;
-        tape.playbackRate = el.const({ key: 'speed', value: tape.playbackSpeed });
+
+        tape.playbackSpeed =
+            deckNumber === 1 ? this.playbackSpeed1 : this.playbackSpeed2;
+        this.setPlaybackRate(tape);
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -349,6 +374,6 @@ export class AppComponent implements OnInit {
             tape.playbackRate
         );
 
-        core.render(tape.L, tape.R);
+        this.renderMixBus();
     }
 }
