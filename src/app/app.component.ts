@@ -265,7 +265,12 @@ export class AppComponent implements OnInit {
 
     private setPlaybackRate(tape: Tape, factor = 1) {
         tape.playbackRate = el.smooth(
-            el.tau2pole(tape.sloppiness),
+            el.tau2pole(
+                el.const({
+                    key: `${tape.name.toLowerCase()}-sloppiness`,
+                    value: tape.sloppiness,
+                })
+            ),
             el.const({
                 key: `${tape.name.toLowerCase()}-speed`,
                 value: tape.playbackSpeed * factor,
@@ -389,8 +394,8 @@ export class AppComponent implements OnInit {
         this.renderMixBus();
     }
 
-    refreshSloppiness(tape: Tape, slopiness: number) {
-        tape.sloppiness = slopiness;
+    refreshSloppiness(tape: Tape, sloppiness: number) {
+        tape.sloppiness = sloppiness;
         this.setPlaybackRate(tape);
 
         tape.L = el.sample(
