@@ -234,6 +234,21 @@ export class AppComponent implements OnInit {
         }
     }
 
+    private setPlaying(tape: Tape, value: boolean) {
+        tape.isPlaying = value;
+        tape.playing = el.const({
+            key: `${tape.name.toLowerCase()}-playing`,
+            value: Number(value),
+        });
+    }
+
+    private setPlaybackRate(tape: Tape, factor = 1) {
+        tape.playbackRate = el.const({
+            key: `${tape.name.toLowerCase()}-speed`,
+            value: tape.playbackSpeed * factor,
+        });
+    }
+
     stop(tape: Tape) {
         this.pause(tape);
         tape.isPlaying = false;
@@ -277,23 +292,8 @@ export class AppComponent implements OnInit {
         this.renderMixBus();
     }
 
-    private setPlaying(tape: Tape, value: boolean) {
-        tape.isPlaying = value;
-        tape.playing = el.const({
-            key: `${tape.name.toLowerCase()}-playing`,
-            value: Number(value),
-        });
-    }
-
-    private setPlaybackRate(tape: Tape, factor = 1) {
-        tape.playbackRate = el.const({
-            key: `${tape.name.toLowerCase()}-speed`,
-            value: tape.playbackSpeed * factor,
-        });
-    }
-
     fastForward(tape: Tape) {
-        this.setPlaybackRate(tape, 2);
+        this.setPlaybackRate(tape, 1.5);
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
@@ -310,7 +310,7 @@ export class AppComponent implements OnInit {
     }
 
     rewind(tape: Tape) {
-        this.setPlaybackRate(tape, -2);
+        this.setPlaybackRate(tape, -1.5);
 
         tape.L = el.sample(
             { key: tape.path_L, path: tape.path_L },
