@@ -15,7 +15,6 @@ import { AudioVisualizerService } from '../audio-visualizer.service';
 export class MixbusMonitorComponent implements AfterViewInit, OnChanges {
     @Input() isPlaying: boolean = false;
     @Input() waveformBuffer: any[] = [];
-    peaks: any[] = [];
 
     constructor(private visualizer: AudioVisualizerService) {}
 
