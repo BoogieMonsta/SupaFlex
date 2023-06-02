@@ -12,20 +12,25 @@ import { AudioVisualizerService } from '../audio-visualizer.service';
     templateUrl: './mixbus-monitor.component.html',
     styleUrls: ['./mixbus-monitor.component.scss'],
 })
-export class MixbusMonitorComponent implements AfterViewInit, OnChanges {
+export class MixbusMonitorComponent implements OnChanges, AfterViewInit {
     @Input() isPlaying: boolean = false;
     @Input() waveformBuffer: any[] = [];
 
     constructor(private visualizer: AudioVisualizerService) {}
 
     ngAfterViewInit(): void {
-        const canvas = document.getElementById('waveform') as HTMLCanvasElement;
-        this.visualizer.setCanvas(canvas);
+        this.visualizer.initPixiApp('waveform-container');
+        this.visualizer.startAnimation();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['waveformBuffer'] && this.isPlaying) {
-            this.visualizer.drawWaveform(this.waveformBuffer[0]);
+            const binnedData = this.visualizer.downsample(
+                this.waveformBuffer[0],
+                100
+            );
+            this.visualizer.pushToBuffer(binnedData);
+            this.visualizer.drawWaveform();
         }
     }
 }

@@ -1,95 +1,157 @@
 import { Injectable } from '@angular/core';
+import * as PIXI from 'pixi.js';
+
+class CircularBuffer {
+    private buffer: Float32Array;
+    private size: number;
+    private start: number;
+    private end: number;
+
+    constructor(size: number) {
+        this.buffer = new Float32Array(size);
+        this.size = size;
+        this.start = 0;
+        this.end = 0;
+    }
+
+    push(value: number) {
+        this.buffer[this.end % this.size] = value;
+        if (this.end - this.start === this.size) {
+            this.start++;
+        }
+        this.end++;
+    }
+
+    get() {
+        if (this.start === this.end) {
+            return new Float32Array();
+        }
+        if (this.end - this.start < this.size) {
+            return this.buffer.slice(this.start, this.end);
+        }
+        return this.buffer;
+    }
+
+    slice(start: number, end: number) {
+        return this.buffer.slice(start, end);
+    }
+
+    replace(newBuffer: Float32Array) {
+        this.buffer = newBuffer;
+        this.start = 0;
+        this.end = newBuffer.length;
+    }
+}
 
 @Injectable({
     providedIn: 'root',
 })
 export class AudioVisualizerService {
-    private canvas: HTMLCanvasElement | null = null;
-    private canvasCtx: CanvasRenderingContext2D | null = null;
-    private allData: Float32Array = new Float32Array();
+    private app: PIXI.Application | null = null;
+    private buffer: CircularBuffer | null = null;
+    private bufferSize: number = 800;
 
     constructor() {}
 
-    setCanvas(canvas: HTMLCanvasElement) {
-        this.canvas = canvas;
-        this.canvasCtx = canvas.getContext('2d');
+    initPixiApp(containerId: string) {
+        this.app = new PIXI.Application({
+            width: 800,
+            height: 160,
+            backgroundColor: '#bebebe',
+            antialias: true,
+        });
 
-        // Set the size of the drawing surface to match the computed size of the canvas element.
-        const computedStyle = getComputedStyle(canvas);
-        canvas.width = parseInt(computedStyle.getPropertyValue('width'), 10);
-        canvas.height = parseInt(computedStyle.getPropertyValue('height'), 10);
+        this.buffer = new CircularBuffer(this.bufferSize);
+
+        const container = document.getElementById(containerId);
+
+        if (container) {
+            container.appendChild(this.app.view as HTMLCanvasElement);
+        }
     }
 
-    drawWaveform(data: Float32Array) {
-        // accumulate the data
-        this.allData = Float32Array.from([
-            ...this.allData,
-            ...Array.from(data).map(Math.abs),
-        ]);
+    downsample(data: Float32Array, binSize: number): Float32Array {
+        let binnedData = new Float32Array(Math.ceil(data.length / binSize));
 
-        if (this.canvas && this.canvasCtx) {
-            // Get the width and height of the canvas.
-            const width = this.canvas.width;
-            const height = this.canvas.height;
+        for (let i = 0, j = 0; i < data.length; i += binSize, j++) {
+            let sum = 0;
+            let count = 0;
 
-            // Clear the canvas.
-            this.canvasCtx.clearRect(0, 0, width, height);
-
-            // Define the number of samples to display on the canvas at a time and the group size.
-            const displaySamples = width * 50; // adjust this value as needed
-            const groupSize = 10; // number of samples to average
-
-            // Get the portion of the data to display.
-            const startIdx = Math.max(0, this.allData.length - displaySamples);
-            const displayData = this.allData.slice(startIdx);
-
-            // Calculate the step size.
-            const step = Math.ceil(displayData.length / width);
-
-            // Calculate the amplitude.
-            const amp = height / 4; // Half the height because we are displaying positive and negative
-
-            // Loop over the data.
-            this.canvasCtx.beginPath();
-            this.canvasCtx.moveTo(0, height / 2);
-            const points = [];
-            for (let i = 0; i < displayData.length; i += step) {
-                // Find the average value for this group.
-                let sum = 0.0;
-                let count = 0;
-                for (let j = 0; j < groupSize; j++) {
-                    const idx = i + j;
-                    if (idx >= displayData.length) {
-                        break;
-                    }
-                    sum += displayData[idx];
+            for (let k = 0; k < binSize; k++) {
+                if (i + k < data.length) {
+                    sum += data[i + k];
                     count++;
                 }
-
-                // Calculate average.
-                const avg = sum / count;
-
-                // Calculate x position on the canvas for this data point.
-                const x = (i / displayData.length) * width;
-
-                // Draw the line for the top half.
-                this.canvasCtx.lineTo(x, height / 2 - avg * amp);
-                points.push({ x, y: height / 2 + avg * amp });
             }
 
-            // // Draw the line for the bottom half.
-            // for (let i = points.length - 1; i >= 0; i--) {
-            //     this.canvasCtx.lineTo(points[i].x, points[i].y);
-            // }
-
-            // Complete the line.
-            this.canvasCtx.lineTo(width, height / 2);
-            this.canvasCtx.lineTo(0, height / 2);
-            this.canvasCtx.closePath();
-
-            // Fill the line.
-            this.canvasCtx.fillStyle = 'darkslategrey';
-            this.canvasCtx.fill();
+            binnedData[j] = sum / count;
         }
+
+        return binnedData;
+    }
+
+    startAnimation() {
+        if (!this.app) {
+            console.warn('Pixi application is not initialized');
+            return;
+        }
+        this.app.ticker.add(() => {
+            this.drawWaveform();
+        });
+    }
+
+    pushToBuffer(data: Float32Array) {
+        // Calculate how much data we're going to keep.
+        const keepSize = this.bufferSize - data.length;
+
+        // Create a new buffer of the appropriate size.
+        let newBuffer = new Float32Array(this.bufferSize);
+
+        if (this.buffer === null) {
+            console.warn('Buffer is not initialized');
+            return;
+        }
+
+        // Copy over the data that we're going to keep.
+        newBuffer.set(this.buffer.slice(data.length, this.bufferSize), 0);
+
+        // Append the new data to the end of the buffer.
+        newBuffer.set(data, keepSize);
+
+        // Replace the old buffer with the new one.
+        this.buffer.replace(newBuffer);
+    }
+
+    drawWaveform() {
+        if (this.buffer === null) {
+            console.warn('Buffer is not initialized');
+            return;
+        }
+
+        if (this.app === null) {
+            console.warn('Pixi application is not initialized');
+            return;
+        }
+
+        // clear the application for new drawing
+        this.app.stage.removeChildren();
+
+        // get the data
+        const displayData = this.buffer.get();
+
+        // start the line
+        const line = new PIXI.Graphics();
+        line.lineStyle(3, 0x4dff98, 1); // (width, color, alpha)
+        line.moveTo(0, this.app.screen.height / 2);
+
+        const step = this.app.screen.width / this.bufferSize;
+        for (let i = 0; i < displayData.length; i++) {
+            const x = i * step;
+            const y = (0.5 - displayData[i] / 2) * this.app.screen.height;
+            line.lineTo(x, y);
+        }
+
+        // draw the line
+        this.app.stage.addChild(line);
     }
 }
