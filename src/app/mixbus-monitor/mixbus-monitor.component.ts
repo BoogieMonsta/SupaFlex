@@ -30,9 +30,7 @@ export class MixbusMonitorComponent
             waveColor: '#4dff98',
             progressColor: '#4dff98',
             cursorColor: '#9ca3af',
-            cursorWidth: 3,
-            barWidth: 2,
-            barGap: 1,
+            cursorWidth: 0,
             fillParent: true,
             height: 128,
         };
