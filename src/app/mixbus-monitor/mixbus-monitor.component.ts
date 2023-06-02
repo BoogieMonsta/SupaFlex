@@ -3,50 +3,32 @@ import {
     Component,
     Input,
     OnChanges,
-    OnDestroy,
     SimpleChanges,
 } from '@angular/core';
-import WaveSurfer from 'wavesurfer.js';
+import { AudioVisualizerService } from '../audio-visualizer.service';
 
 @Component({
     selector: 'app-mixbus-monitor',
     templateUrl: './mixbus-monitor.component.html',
     styleUrls: ['./mixbus-monitor.component.scss'],
 })
-export class MixbusMonitorComponent
-    implements AfterViewInit, OnChanges, OnDestroy
-{
+export class MixbusMonitorComponent implements AfterViewInit, OnChanges {
     @Input() isPlaying: boolean = false;
     @Input() waveformBuffer: any[] = [];
     peaks: any[] = [];
 
-    private wavesurfer: WaveSurfer | undefined;
-
-    constructor() {}
+    constructor(private visualizer: AudioVisualizerService) {}
 
     ngAfterViewInit(): void {
-        const options = {
-            container: '#waveform',
-            waveColor: '#4dff98',
-            progressColor: '#4dff98',
-            cursorColor: '#9ca3af',
-            cursorWidth: 0,
-            fillParent: true,
-            height: 128,
-        };
-        this.wavesurfer = WaveSurfer.create(options);
+        const canvas = document.getElementById('waveform') as HTMLCanvasElement;
+        this.visualizer.setCanvas(canvas);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['waveformBuffer'] && this.wavesurfer && this.isPlaying) {
-            this.peaks = [...this.peaks, ...this.waveformBuffer[0]];
-            this.wavesurfer.load('/assets/samples/drangie.mp3', this.peaks);
-        }
-    }
+        console.log('playing: ', this.isPlaying);
 
-    ngOnDestroy(): void {
-        if (this.wavesurfer) {
-            this.wavesurfer.destroy();
+        if (changes['waveformBuffer'] && this.isPlaying) {
+            this.visualizer.drawWaveform(this.waveformBuffer[0]);
         }
     }
 }
