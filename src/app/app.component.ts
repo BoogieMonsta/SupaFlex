@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { el } from '@elemaudio/core';
 import WebRenderer from '@elemaudio/web-renderer';
-import { Transport, TransportState } from './models/AudioTransport';
 import { AudioTransportService } from './audio-transport.service';
-import { Tape } from './models/Tape';
+import { Transport, TransportState } from './models/AudioTransport';
 import { Deck } from './models/Deck';
+import { Tape } from './models/Tape';
+import { SliderOrientation, SliderSettings } from './slider/slider.component';
 
 const core = new WebRenderer();
 let ctx = new AudioContext();
@@ -18,6 +19,16 @@ let audioBuffer: AudioBuffer;
 export class AppComponent implements OnInit {
     srcButtons: string[] = [];
     dstButtons: string[] = [];
+
+    speedCtrlSettings: SliderSettings = {
+        orientation: SliderOrientation.vertical,
+        start: [1],
+        step: 0.01,
+        range: {
+            'min': -3,
+            'max': 3,
+        },
+    };
 
     isOn = false;
     deck1: Deck = {
@@ -67,22 +78,13 @@ export class AppComponent implements OnInit {
         sloppiness: 0,
     };
 
-    private _playbackSpeed1 = 1;
-    set playbackSpeed1(speed: number) {
-        this._playbackSpeed1 = speed;
-        this.refreshPlaybackSpeed(this.sourceTape, speed);
-    }
-    get playbackSpeed1() {
-        return this._playbackSpeed1;
-    }
-
-    private _playbackSpeed2 = 1;
-    set playbackSpeed2(speed: number) {
-        this._playbackSpeed2 = speed;
-        this.refreshPlaybackSpeed(this.destTape, speed);
-    }
-    get playbackSpeed2() {
-        return this._playbackSpeed2;
+    handlePlaybackSpeedChange(event: any, deckNb: number) {
+        if (deckNb !== 1 && deckNb !== 2) {
+            console.error('Invalid deck number', deckNb);
+            return;
+        }
+        const tape = deckNb === 1 ? this.sourceTape : this.destTape;
+        this.refreshPlaybackSpeed(tape, event.value);
     }
 
     private _sloppiness1 = 0.03;

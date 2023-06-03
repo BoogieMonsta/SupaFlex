@@ -2,6 +2,7 @@ $btn-width: 50px;
 $deck1-btn-count: 5;
 $deck2-btn-count: 6;
 $gap: 3px;
+$bg-color: #272729;
 
 .container-deck1:before,
 .container-deck2:before {
@@ -22,4 +23,35 @@ $gap: 3px;
 
 .container-deck2:before {
     width: $btn-width * $deck2-btn-count + $gap * ($deck2-btn-count - 1);
+}
+
+::ng-deep #waveform-container canvas {
+    border-radius: 10px;
+    border: 1px solid darken($bg-color, 20);
+    box-shadow: inset 0 0 1px darken($bg-color, 20), inset 0 1px 7px darken($bg-color, 20),
+        0 3px 6px -3px darken($bg-color, 20);
+}
+
+.gradient-button {
+    background: radial-gradient(lighten($bg-color, 30) 15%, lighten($bg-color, 10) 85%);
+    border: 3px solid lighten($bg-color, 3);
+    transition: all 0.3s ease-in-out;
+    filter: brightness(1);
+}
+
+.isOn {
+    filter: brightness(2);
+    border: 3px solid darken($bg-color, 5);
+}
+
+.text-stroke {
+    -webkit-text-stroke: 1px #222227; /* For webkit browsers */
+    filter: brightness(1);
+    transition: all 0.3s ease-in-out;
+}
+
+.on-title {
+    filter: brightness(4);
+    -webkit-text-stroke: 1px #303036;
+    text-shadow: 0 0 10px #e4e4e46a, 0 0 20px #e4e4e441, 0 0 30px #e4e4e43f, 0 0 40px #e4e4e428;
 }

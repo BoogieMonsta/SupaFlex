@@ -1,0 +1,66 @@
+$text-color: #71717a;
+
+.noUi-vertical {
+    height: 333px;
+    width: 7px;
+    border: none;
+}
+
+::ng-deep .playbackSpeed1 .noUi-value-large,
+::ng-deep .playbackSpeed2 .noUi-value-large {
+    color: $text-color;
+}
+::ng-deep .playbackSpeed1 .noUi-marker-large,
+::ng-deep .playbackSpeed1 .noUi-marker-normal,
+::ng-deep .playbackSpeed2 .noUi-marker-large,
+::ng-deep .playbackSpeed2 .noUi-marker-normal {
+    background: $text-color;
+}
+
+::ng-deep .playbackSpeed1 .noUi-pips-vertical {
+    left: -740%;
+}
+
+::ng-deep .playbackSpeed2 .noUi-pips-vertical {
+    left: 330%;
+}
+
+::ng-deep .playbackSpeed1 .noUi-marker-normal {
+    left: 100%;
+}
+
+::ng-deep .playbackSpeed1 .noUi-value-large {
+    left: -200%;
+}
+
+::ng-deep .noUi-vertical .noUi-handle {
+    right: -26px;
+    bottom: -9px;
+    width: 60px;
+    height: 19px;
+    background: #27272c;
+    border-radius: 2px;
+    border: 1px solid #1f1f23;
+    border-top: #c0c0c00d 2px solid;
+    border-bottom: #00000071 2px solid;
+    box-shadow: inset 0 0 1px #19191d, inset 0 1px 7px #19191d,
+        0 3px 6px -3px #000000;
+}
+
+::ng-deep .noUi-vertical .noUi-handle:before {
+    width: 58px;
+    height: 5px;
+    left: 0px;
+    top: 5px;
+    background: linear-gradient(#838383, rgb(192, 192, 192), #838383);
+}
+
+::ng-deep .noUi-vertical .noUi-handle:after {
+    display: none;
+}
+
+::ng-deep .playbackSpeed1 .noUi-base,
+::ng-deep .playbackSpeed2 .noUi-base {
+    background: linear-gradient(to right, #27272b, #1b1b1d, #27272b);
+    border-radius: 2px;
+}

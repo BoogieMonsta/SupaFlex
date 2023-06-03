@@ -1,40 +1,31 @@
-<div class="flex flex-col items-center justify-center h-screen bg-gray-300">
-    <!-- Header -->
-    <!-- <div class="flex flex-col items-center p-5" id="header">
-
-    </div> -->
-
-    <!-- Main White Container -->
+<div class="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-zinc-900 to-black">
+    <!-- Main Container -->
     <div
-        class="bg-gray-200 w-[calc(67vw)] h-[calc(85vh)] flex flex-col justify-evenly items-center rounded-xl shadow-xl z-0 relative"
+        class="bg-gradient-to-b from-zinc-800 to-zinc-900 w-[calc(67vw)] h-[calc(85vh)] flex flex-col justify-evenly items-center rounded-xl shadow-xl z-0 relative"
     >
         <!-- On/Off Btn -->
         <button
-            class="text-xs shadow-sm w-10 bg-gray-300 pt-1 pb-1 pl-0 pr-0 rounded-xl absolute top-3 left-3"
+            class="text-xs shadow-sm w-10 h-10 bg-zinc-300 pt-1 pb-1 pl-0 pr-0 rounded-full absolute top-3 left-3 gradient-button"
+            [ngClass]="{ isOn: isOn }"
             (click)="toggleAudioOnOff()"
         >
-            <span class="text-gray-400">
-                {{ isOn ? "OFF" : "ON" }}
-            </span>
+            <span class="text-zinc-700 font-bold on-btn-label"> ON </span>
         </button>
 
         <!-- Logo -->
-        <h1 class="text-gray-300 font-bebas-neue text-7xl text-stroke">SupaFlex</h1>
+        <h1 class="text-zinc-700 font-bebas-neue text-7xl text-stroke" [ngClass]="{ 'on-title': isOn }">
+            SupaFlex
+        </h1>
 
         <!-- Cassettes -->
         <div class="flex flex-row justify-evenly w-full">
             <!-- Deck 1 -->
             <div class="flex flex-col items-center gap-10">
-                <app-cassette
-                    class="cassette1"
-                    [title]="'Hard Bop #3'"
-                    [color]="'green'"
-                ></app-cassette>
-
+                <!-- Sloppiness -->
                 <div class="flex justify-center items-center gap-3">
                     <label
                         for="sloppiness-1"
-                        class="font-bebas-neue text-gray-400"
+                        class="font-bebas-neue text-zinc-500"
                         >tight</label
                     >
                     <input
@@ -47,12 +38,19 @@
                     />
                     <label
                         for="sloppiness-1"
-                        class="font-bebas-neue text-gray-400"
+                        class="font-bebas-neue text-zinc-500"
                         >sloppy</label
                     >
                 </div>
 
-                <div>{{ deck1.state }}</div>
+                <!-- Cassette -->
+                <app-cassette
+                    class="cassette1"
+                    [title]="'Hard Bop #3'"
+                    [color]="'green'"
+                ></app-cassette>
+
+                <!-- <div>{{ deck1.state }}</div> -->
 
                 <!-- Buttons Deck 1 -->
                 <div
@@ -70,70 +68,32 @@
 
             <!-- Speed Control -->
             <div class="flex flex-col items-center">
-                <div class="flex gap-5">
-                    <input
-                        type="range"
-                        id="speed-control-1"
-                        name="speed1"
-                        min="-3"
-                        max="3"
-                        step="0.05"
-                        list="markers"
-                        orient="vertical"
-                        class="h-[340px] w-20"
-                        [(ngModel)]="playbackSpeed1"
-                    />
-                    <div
-                        class="flex flex-col items-center justify-between font-bebas-neue text-2xl text-gray-400"
-                    >
-                        <div>3</div>
-                        <div>2</div>
-                        <div>1</div>
-                        <div>0</div>
-                        <div>-1</div>
-                        <div>-2</div>
-                        <div>-3</div>
-                    </div>
-                    <input
-                        type="range"
-                        id="speed-control-2"
-                        name="speed2"
-                        min="-3"
-                        max="3"
-                        step="0.05"
-                        list="markers"
-                        orient="vertical"
-                        class="h-[340px] w-20"
-                        [(ngModel)]="playbackSpeed2"
-                    />
-                    <!-- Markers  -->
-                    <datalist id="markers">
-                        <option value="-3"></option>
-                        <option value="-2"></option>
-                        <option value="-1"></option>
-                        <option value="0"></option>
-                        <option value="1"></option>
-                        <option value="2"></option>
-                        <option value="3"></option>
-                    </datalist>
+                <div class="flex gap-20">
+                    <app-slider
+                        [settings]="speedCtrlSettings"
+                        [deckNb]="1"
+                        [name]="'playbackSpeed1'"
+                        (dataEmitter)="handlePlaybackSpeedChange($event, 1)"
+                    ></app-slider>
+                    <app-slider
+                        [settings]="speedCtrlSettings"
+                        [deckNb]="2"
+                        [name]="'playbackSpeed2'"
+                        (dataEmitter)="handlePlaybackSpeedChange($event, 2)"
+                    ></app-slider>
                 </div>
-                <div class="mt-5 font-bebas-neue text-gray-400">
+                <div class="mt-5 font-bebas-neue text-zinc-500">
                     PLAYBACK SPEED
                 </div>
             </div>
 
             <!-- Deck 2 -->
             <div class="flex flex-col items-center gap-10">
-                <app-cassette
-                    class="cassette2"
-                    [title]="'Chop Mix #1'"
-                    [color]="'blue'"
-                ></app-cassette>
-
+                <!-- Sloppiness -->
                 <div class="flex justify-center items-center gap-3">
                     <label
                         for="sloppiness-2"
-                        class="font-bebas-neue text-gray-400"
+                        class="font-bebas-neue text-zinc-500"
                         >tight</label
                     >
                     <input
@@ -146,12 +106,19 @@
                     />
                     <label
                         for="sloppiness-2"
-                        class="font-bebas-neue text-gray-400"
+                        class="font-bebas-neue text-zinc-500"
                         >sloppy</label
                     >
                 </div>
 
-                <div>{{ deck2.state }}</div>
+                <!-- Cassette -->
+                <app-cassette
+                    class="cassette2"
+                    [title]="'Chop Mix #1'"
+                    [color]="'blue'"
+                ></app-cassette>
+
+                <!-- <div>{{ deck2.state }}</div> -->
 
                 <!-- Buttons Deck 2 -->
                 <div class="container-deck2 flex flex-row gap-[3px] w-fit z-10">

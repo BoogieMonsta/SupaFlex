@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { CassetteComponent } from './cassette/cassette.component';
 import { TapeRecorderButtonComponent } from './tape-recorder-button/tape-recorder-button.component';
 import { MixbusMonitorComponent } from './mixbus-monitor/mixbus-monitor.component';
+import { SliderComponent } from './slider/slider.component';
 
 @NgModule({
     declarations: [
@@ -14,6 +15,7 @@ import { MixbusMonitorComponent } from './mixbus-monitor/mixbus-monitor.componen
         CassetteComponent,
         TapeRecorderButtonComponent,
         MixbusMonitorComponent,
+        SliderComponent,
     ],
     imports: [BrowserModule, HttpClientModule, FormsModule],
     providers: [],
