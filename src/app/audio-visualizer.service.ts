@@ -57,8 +57,9 @@ export class AudioVisualizerService {
         this.app = new PIXI.Application({
             width: 800,
             height: 160,
-            backgroundColor: '#bebebe',
+            backgroundColor: '#494949',
             antialias: true,
+            backgroundAlpha: 0.5,
         });
 
         this.buffer = new CircularBuffer(this.bufferSize);
@@ -101,10 +102,10 @@ export class AudioVisualizerService {
     }
 
     pushToBuffer(data: Float32Array) {
-        // Calculate how much data we're going to keep.
+        // Calculate how much data we're going to keep
         const keepSize = this.bufferSize - data.length;
 
-        // Create a new buffer of the appropriate size.
+        // Create a new buffer of the appropriate size
         let newBuffer = new Float32Array(this.bufferSize);
 
         if (this.buffer === null) {
@@ -112,13 +113,13 @@ export class AudioVisualizerService {
             return;
         }
 
-        // Copy over the data that we're going to keep.
+        // Copy over the data that we're going to keep
         newBuffer.set(this.buffer.slice(data.length, this.bufferSize), 0);
 
-        // Append the new data to the end of the buffer.
+        // Append the new data to the end of the buffer
         newBuffer.set(data, keepSize);
 
-        // Replace the old buffer with the new one.
+        // Replace the old buffer with the new one
         this.buffer.replace(newBuffer);
     }
 
@@ -141,7 +142,7 @@ export class AudioVisualizerService {
 
         // start the line
         const line = new PIXI.Graphics();
-        line.lineStyle(3, 0x4dff98, 1); // (width, color, alpha)
+        line.lineStyle(2, 'white', 1); // (width, color, alpha)
         line.moveTo(0, this.app.screen.height / 2);
 
         const step = this.app.screen.width / this.bufferSize;

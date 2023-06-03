@@ -3,7 +3,8 @@ $deck1-btn-count: 5;
 $deck2-btn-count: 6;
 $gap: 3px;
 
-.container-deck1:before, .container-deck2:before {
+.container-deck1:before,
+.container-deck2:before {
     content: "";
     background: #7b7b7b;
     height: 63px;
@@ -21,8 +22,4 @@ $gap: 3px;
 
 .container-deck2:before {
     width: $btn-width * $deck2-btn-count + $gap * ($deck2-btn-count - 1);
-}
-
-#speed-control-1, #speed-control-2 {
-    appearance: slider-vertical;
 }

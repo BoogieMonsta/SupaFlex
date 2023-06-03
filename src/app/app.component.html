@@ -1,20 +1,28 @@
-<div class="flex flex-col items-center h-screen bg-gray-50">
+<div class="flex flex-col items-center justify-center h-screen bg-gray-300">
     <!-- Header -->
-    <div class="flex flex-col items-center p-5" id="header">
-        <h1 class="text-green-300 font-bebas-neue text-7xl">
-            Pause<span class="text-gray-300">Tape</span>
-        </h1>
-        <button class="text-xs shadow-sm" (click)="toggleAudioOnOff()">
-            ON/OFF
-        </button>
-    </div>
+    <!-- <div class="flex flex-col items-center p-5" id="header">
+
+    </div> -->
 
     <!-- Main White Container -->
     <div
-        class="bg-white w-[calc(67vw)] h-[calc(67vh)] flex flex-col justify-center rounded-xl shadow-xl z-0"
+        class="bg-gray-200 w-[calc(67vw)] h-[calc(85vh)] flex flex-col justify-evenly items-center rounded-xl shadow-xl z-0 relative"
     >
+        <!-- On/Off Btn -->
+        <button
+            class="text-xs shadow-sm w-10 bg-gray-300 pt-1 pb-1 pl-0 pr-0 rounded-xl absolute top-3 left-3"
+            (click)="toggleAudioOnOff()"
+        >
+            <span class="text-gray-400">
+                {{ isOn ? "OFF" : "ON" }}
+            </span>
+        </button>
+
+        <!-- Logo -->
+        <h1 class="text-gray-300 font-bebas-neue text-7xl text-stroke">SupaFlex</h1>
+
         <!-- Cassettes -->
-        <div class="flex flex-row justify-evenly">
+        <div class="flex flex-row justify-evenly w-full">
             <!-- Deck 1 -->
             <div class="flex flex-col items-center gap-10">
                 <app-cassette
@@ -47,7 +55,9 @@
                 <div>{{ deck1.state }}</div>
 
                 <!-- Buttons Deck 1 -->
-                <div class="container-deck1 flex flex-row gap-[3px] w-fit z-10">
+                <div
+                    class="container-deck1 flex flex-row items-center justify-center gap-[3px] w-[315px] z-10"
+                >
                     <app-tape-recorder-button
                         *ngFor="let btn of srcButtons"
                         iconName="{{ btn }}"
@@ -60,7 +70,7 @@
 
             <!-- Speed Control -->
             <div class="flex flex-col items-center">
-                <div class="flex">
+                <div class="flex gap-5">
                     <input
                         type="range"
                         id="speed-control-1"
