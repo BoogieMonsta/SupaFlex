@@ -25,12 +25,7 @@ export class MixbusMonitorComponent implements OnChanges, AfterViewInit {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['waveformBuffer'] && this.isPlaying) {
-            const binnedData = this.visualizer.downsample(
-                this.waveformBuffer[0],
-                100
-            );
-            this.visualizer.pushToBuffer(binnedData);
-            this.visualizer.drawWaveform();
+            this.visualizer.pushToBuffer(this.waveformBuffer[0]);
         }
     }
 }

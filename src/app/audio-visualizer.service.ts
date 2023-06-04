@@ -102,23 +102,26 @@ export class AudioVisualizerService {
     }
 
     pushToBuffer(data: Float32Array) {
+        // Downsample the data
+        let downsampledData = this.downsample(data, 50);
+    
         // Calculate how much data we're going to keep
-        const keepSize = this.bufferSize - data.length;
-
+        const keepSize = this.bufferSize - downsampledData.length;
+    
         // Create a new buffer of the appropriate size
         let newBuffer = new Float32Array(this.bufferSize);
-
+    
         if (this.buffer === null) {
             console.warn('Buffer is not initialized');
             return;
         }
-
+    
         // Copy over the data that we're going to keep
-        newBuffer.set(this.buffer.slice(data.length, this.bufferSize), 0);
-
+        newBuffer.set(this.buffer.slice(downsampledData.length, this.bufferSize), 0);
+    
         // Append the new data to the end of the buffer
-        newBuffer.set(data, keepSize);
-
+        newBuffer.set(downsampledData, keepSize);
+    
         // Replace the old buffer with the new one
         this.buffer.replace(newBuffer);
     }

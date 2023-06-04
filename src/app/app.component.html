@@ -138,7 +138,7 @@
 
         <!-- Mixbus Monitor -->
         <app-mixbus-monitor
-            [isPlaying]="deck1.state !== 'stopped' || deck2.state !== 'stopped'"
+            [isPlaying]="(deck1.state !== 'stopped' && deck1.state !== 'paused') || (deck2.state !== 'stopped' && deck2.state !== 'paused')"
             [waveformBuffer]="mixWaveform"
         ></app-mixbus-monitor>
     </div>
