@@ -5,7 +5,7 @@ import { AudioTransportService } from './audio-transport.service';
 import { Transport, TransportState } from './models/AudioTransport';
 import { Deck } from './models/Deck';
 import { Tape } from './models/Tape';
-import { SliderOrientation, SliderSettings } from './slider/slider.component';
+import { SliderDirection, SliderOrientation, SliderSettings } from './slider/slider.component';
 
 const core = new WebRenderer();
 let ctx = new AudioContext();
@@ -22,11 +22,23 @@ export class AppComponent implements OnInit {
 
     speedCtrlSettings: SliderSettings = {
         orientation: SliderOrientation.vertical,
+        direction: SliderDirection.rtl,
         start: [1],
         step: 0.01,
         range: {
             'min': -3,
             'max': 3,
+        },
+    };
+
+    sloppinessSettings: SliderSettings = {
+        orientation: SliderOrientation.horizontal,
+        direction: SliderDirection.ltr,
+        start: [0.03],
+        step: 0.01,
+        range: {
+            'min': 0.01,
+            'max': 0.1,
         },
     };
 
@@ -78,33 +90,6 @@ export class AppComponent implements OnInit {
         sloppiness: 0,
     };
 
-    handlePlaybackSpeedChange(event: any, deckNb: number) {
-        if (deckNb !== 1 && deckNb !== 2) {
-            console.error('Invalid deck number', deckNb);
-            return;
-        }
-        const tape = deckNb === 1 ? this.sourceTape : this.destTape;
-        this.refreshPlaybackSpeed(tape, event.value);
-    }
-
-    private _sloppiness1 = 0.03;
-    set sloppiness1(sloppiness: number) {
-        this._sloppiness1 = sloppiness;
-        this.refreshSloppiness(this.sourceTape, sloppiness);
-    }
-    get sloppiness1() {
-        return this._sloppiness1;
-    }
-
-    private _sloppiness2 = 0.03;
-    set sloppiness2(sloppiness: number) {
-        this._sloppiness2 = sloppiness;
-        this.refreshSloppiness(this.destTape, sloppiness);
-    }
-    get sloppiness2() {
-        return this._sloppiness2;
-    }
-
     mixWaveform: any[] = [];
 
     constructor(private transportService: AudioTransportService) {}
@@ -154,6 +139,24 @@ export class AppComponent implements OnInit {
             tape.playing, // trigger (1 = one-shot)
             tape.playbackRate
         );
+    }
+
+    handlePlaybackSpeedChange(event: any, deckNb: number) {
+        if (deckNb !== 1 && deckNb !== 2) {
+            console.error('Invalid deck number', deckNb);
+            return;
+        }
+        const tape = deckNb === 1 ? this.sourceTape : this.destTape;
+        this.refreshPlaybackSpeed(tape, event.value);
+    }
+
+    handleSloppinessChange(event: any, deckNb: number) {
+        if (deckNb !== 1 && deckNb !== 2) {
+            console.error('Invalid deck number', deckNb);
+            return;
+        }
+        const tape = deckNb === 1 ? this.sourceTape : this.destTape;
+        this.refreshSloppiness(tape, event.value);
     }
 
     onBtnDown(btnData: any) {

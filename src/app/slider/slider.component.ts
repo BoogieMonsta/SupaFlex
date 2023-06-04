@@ -19,6 +19,7 @@ export interface SliderData {
 
 export interface SliderSettings {
     orientation: SliderOrientation;
+    direction: SliderDirection;
     step: number;
     start: number[];
     range: {
@@ -38,6 +39,7 @@ export class SliderComponent implements AfterViewInit {
     @Input() settings!: SliderSettings;
     @Input() deckNb!: number;
     @Input() name!: string;
+    @Input() grad: boolean = false;
     @Output() dataEmitter: EventEmitter<SliderData> = new EventEmitter<SliderData>();
 
     constructor() { }
@@ -49,12 +51,12 @@ export class SliderComponent implements AfterViewInit {
             range: this.settings.range,
             step: this.settings.step,
             orientation: this.settings.orientation,
-            direction: SliderDirection.rtl,
-            pips: { 
+            direction: this.settings.direction,
+            pips: this.grad ? { 
                 mode: PipsMode.Values,
                 values: [-3, -2, -1, 0, 1, 2, 3],
                 density: 4,
-              }
+              } : undefined,
         });
 
         slider.classList.add(this.name);
