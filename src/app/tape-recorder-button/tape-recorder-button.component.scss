@@ -1,6 +1,6 @@
 $height: 75;
 $depth: 5;
-$color: gray;
+$color: #525252;
 $icon-color: darken($color, 5%);
 $red-color: #e7473c;
 $button-speed: 0.05;
@@ -54,8 +54,8 @@ button {
         darken($red-color, 15%) 85%,
         $red-color 100%
     );
-    border-top: 2px solid lighten($red-color, 15%);
-    border-bottom: 2px solid lighten($red-color, 10%);
+    border-top: 2px solid lighten($red-color, 13%);
+    border-bottom: 2px solid lighten($red-color, 6%);
 }
 .rec:active,
 .rec.pressed {
@@ -99,12 +99,13 @@ button {
 .rec:before {
     background: linear-gradient(
         to top,
-        darken($red-color, 35%) 0%,
+        darken($red-color, 85%) 0%,
         darken($red-color, 15%) $depth + px
     );
-    box-shadow: 0 1px 0 2px rgba(123, 0, 0, 0.3),
-        0 5px ($depth * 0.4 + px) rgba(123, 0, 0, 0.5),
-        0 ($depth * 1.8 + px) 9px rgba(123, 0, 0, 0.2);
+    box-shadow: 0 1px 0 2px rgba(0, 0, 0, 0.2),
+        0 5px ($depth * 0.4 + px) rgba(0, 0, 0, 0.4),
+        0 ($depth * 1.8 + px) 9px rgba(0, 0, 0, 0.1);
+    filter: blur(1px);
 }
 
 ::ng-deep .button .icon svg {
