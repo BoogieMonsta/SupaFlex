@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
         orientation: SliderOrientation.horizontal,
         direction: SliderDirection.ltr,
         start: [0.03],
-        step: 0.01,
+        // step: 0.01,
         range: {
             'min': 0.01,
             'max': 0.1,

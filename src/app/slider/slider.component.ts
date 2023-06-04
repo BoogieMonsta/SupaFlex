@@ -20,7 +20,7 @@ export interface SliderData {
 export interface SliderSettings {
     orientation: SliderOrientation;
     direction: SliderDirection;
-    step: number;
+    step?: number;
     start: number[];
     range: {
         'min': number;

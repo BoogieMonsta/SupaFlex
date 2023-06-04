@@ -1,14 +1,12 @@
-.cassette {
-    --width: 224px;
-    --bgcolor: #dcdcdc;
-    --border-color: #e5e5e5;
-    --light-color: #f1efef;
-    --dark-color: #c9c9c9;
-    --external-notch-shape: polygon(100% 0, 0 5%, 0 95%, 100% 100%);
+$width: 224px;
+$bgcolor: #3f4142;
+$external-notch-shape: polygon(100% 0, 0 5%, 0 95%, 100% 100%);
 
-    width: var(--width);
-    background: linear-gradient(var(--bgcolor), #b4b4b4);
-    border-radius: calc(var(--width) / 30);
+.cassette {
+    width: $width;
+    background: linear-gradient($bgcolor, darken($bgcolor, 10%));
+    border-radius: calc($width / 30);
+    border-top: 2px solid #ffffff4e;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -17,22 +15,22 @@
     &::after {
         content: "";
         display: block;
-        width: calc(var(--width) / 90);
-        height: calc(var(--width) / 6);
+        width: calc($width / 90);
+        height: calc($width / 6);
         position: absolute;
-        bottom: calc(var(--width) / 22);
-        clip-path: var(--external-notch-shape);
+        bottom: calc($width / 22);
+        clip-path: $external-notch-shape;
     }
 
     &::before {
-        left: calc(calc(var(--width) / 448) * (-5));
-        background: var(--dark-color);
+        left: calc(calc($width / 448) * (-5));
+        background: darken($bgcolor, 5%);
     }
 
     &::after {
-        right: calc(calc(var(--width) / 448) * (-5));
+        right: calc(calc($width / 448) * (-5));
         transform: scaleX(-1);
-        background: var(--dark-color);
+        background: darken($bgcolor, 5%);
     }
 
     & .medium-tape {
@@ -42,29 +40,27 @@
 
         & .label-container {
             width: 90%;
-            background: var(--dark-color);
-            border-radius: calc(calc(var(--width) / 112) * 3);
-            padding: calc(var(--width) / 100);
+            background: darken($bgcolor, 5%);
+            border-radius: calc(calc($width / 112) * 3);
+            padding: calc($width / 100);
 
             & .label {
-                background: #eee;
                 background-image: repeating-linear-gradient(
-                        transparent 0 calc(var(--width) * 20 / 448),
-                        #c4c4c4 calc(var(--width) * 20 / 448)
-                            calc(var(--width) * 21 / 448)
+                        transparent 0 calc($width * 20 / 448),
+                        #c4c4c4 calc($width * 20 / 448) calc($width * 21 / 448)
                     ),
                     linear-gradient(278deg, #f3f3f3, #e8e8e8);
-                border-radius: calc(var(--width) / 45);
+                border-radius: calc($width / 45);
 
                 & .top-label {
-                    height: calc(var(--width) / 7.3);
+                    height: calc($width / 7.3);
 
                     & .top-text {
                         font-family: "Captions";
-                        font-size: calc(var(--width) / 12);
+                        font-size: calc($width / 12);
                         line-height: 110%;
                         text-align: center;
-                        transform: translateY(calc(var(--width) / 50));
+                        transform: translateY(calc($width / 50));
 
                         & div {
                             color: #484848;
@@ -73,23 +69,17 @@
                 }
 
                 & .medium-label {
-                    height: calc(var(--width) / 3.5);
+                    height: calc($width / 3.5);
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    border-radius: 0 0 calc(var(--width) / 45)
-                        calc(var(--width) / 45);
+                    border-radius: 0 0 calc($width / 45) calc($width / 45);
 
                     & .gap-container {
-                        width: calc(var(--width) / 1.81);
-                        height: calc(var(--width) / 6);
-                        border: calc(var(--width) / 100) solid #aaa9;
-                        background: var(--dark-color);
-                        background-image: linear-gradient(
-                            76deg,
-                            transparent,
-                            #aaa2
-                        );
+                        width: calc($width / 1.81);
+                        height: calc($width / 6);
+                        border: calc($width / 100) solid darken($bgcolor, 10%);
+                        background: darken($bgcolor, 5%);
                         border-radius: 3em;
 
                         & .gap {
@@ -100,19 +90,18 @@
                             align-items: center;
 
                             & .tapereel {
-                                width: calc(var(--width) / 9);
-                                height: calc(var(--width) / 9);
+                                width: calc($width / 9);
+                                height: calc($width / 9);
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
                                 border-radius: 50%;
-                                border: calc(var(--width) / 100) solid #eeeeee;
-                                box-shadow: 0 0 0 calc(var(--width) / 120)
-                                    #5a5a5a;
+                                border: calc($width / 100) solid #eeeeee;
+                                box-shadow: 0 0 0 calc($width / 120) #5a5a5a;
                                 background: radial-gradient(
-                                    #cccfd6 0%,
+                                    #cccfd6 5%,
                                     #65676d 25%,
-                                    #000000 100%
+                                    #000000 80%
                                 );
 
                                 &.left {
@@ -130,8 +119,8 @@
                                         transparent 12% 88%,
                                         #eeeeee 90% 100%
                                     );
-                                    width: calc(var(--width) / 9);
-                                    height: calc(var(--width) / 50);
+                                    width: calc($width / 9);
+                                    height: calc($width / 50);
                                     position: absolute;
                                 }
 
@@ -147,11 +136,16 @@
                             }
 
                             & .central-gap {
-                                width: calc(var(--width) / 4.5);
-                                height: calc(var(--width) / 9);
-                                border: calc(var(--width) / 100) solid #9d9d9d;
-                                background: rgba(255, 255, 255, 0.8);
-                                margin: 0 calc(var(--width) / 40);
+                                width: calc($width / 4.5);
+                                height: calc($width / 9);
+                                border: calc($width / 150) solid
+                                    darken($bgcolor, 14%);
+                                border-top: calc($width / 150) solid
+                                    darken($bgcolor, 18%);
+                                border-bottom: calc($width / 150) solid
+                                    darken($bgcolor, 10%);
+                                background: #222225;
+                                margin: 0 calc($width / 40);
                                 overflow: hidden;
                                 position: relative;
 
@@ -170,15 +164,14 @@
                                 }
 
                                 & .innertape {
-                                    width: calc(var(--width) / 3);
-                                    height: calc(var(--width) / 3);
+                                    width: calc($width / 3);
+                                    height: calc($width / 3);
                                     border-radius: 50%;
                                     background: radial-gradient(
-                                        #999 30%,
-                                        #3e3e3e 47% 100%
+                                        #9a7e79 30%,
+                                        #362d2d 47% 100%
                                     );
-                                    border: calc(var(--width) / 150) solid
-                                        #212121;
+                                    border: calc($width / 150) solid #212121;
                                     position: relative;
 
                                     &.left {
@@ -194,41 +187,33 @@
                         }
                     }
                 }
-
-                & .bottom-label {
-                    border-bottom-left-radius: 10px;
-                    border-bottom-right-radius: 10px;
-                    background: #eee;
-                    background-image: linear-gradient(-278deg, #eee, #ccc);
-                    height: 32px;
-                    display: flex;
-                    justify-content: space-around;
-                    align-items: center;
-                }
             }
         }
     }
 
     & .bottom-tape {
-        height: calc(var(--width) / 5.6);
+        height: calc($width / 5.6);
         display: flex;
         justify-content: center;
         align-items: flex-end;
 
         & .magnetic-shield-container {
             filter: drop-shadow(-4px 0 2px #13131315)
-                drop-shadow(4px 0 2px #38383815)
-                drop-shadow(0 -4px 2px #20202015);
+                drop-shadow(4px 0 2px #38383815);
 
             & .magnetic-shield {
-                background: linear-gradient(#c1c1c1, #adadad);
-                width: calc(var(--width) / 1.3);
-                height: calc(var(--width) / 7);
+                border-top: 1px #ffffff3c solid;
+                background: linear-gradient(
+                    darken($bgcolor, 7%),
+                    darken($bgcolor, 11%)
+                );
+                width: calc($width / 1.3);
+                height: calc($width / 7);
                 clip-path: polygon(0 100%, 4% 0, 96% 0, 100% 100%);
                 display: flex;
                 justify-content: space-between;
-                transform: translateY(calc(var(--width) / 100));
-                border-radius: calc(var(--width) / 100);
+                transform: translateY(calc($width / 100));
+                border-radius: calc($width / 100);
             }
         }
     }
