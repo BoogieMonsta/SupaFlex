@@ -1,0 +1,126 @@
+$text-color: #71717a;
+
+// ================================================
+// VERTICAL
+// ================================================
+
+.noUi-vertical {
+    height: 333px;
+    width: 7px;
+    border: none;
+}
+
+// PIPS
+
+::ng-deep .playbackSpeed1 .noUi-value-large,
+::ng-deep .playbackSpeed2 .noUi-value-large {
+    color: $text-color;
+}
+::ng-deep .playbackSpeed1 .noUi-marker-large,
+::ng-deep .playbackSpeed1 .noUi-marker-normal,
+::ng-deep .playbackSpeed2 .noUi-marker-large,
+::ng-deep .playbackSpeed2 .noUi-marker-normal {
+    background: $text-color;
+}
+
+::ng-deep .playbackSpeed1 .noUi-pips-vertical {
+    left: -740%;
+}
+
+::ng-deep .playbackSpeed2 .noUi-pips-vertical {
+    left: 330%;
+}
+
+::ng-deep .playbackSpeed1 .noUi-marker-normal {
+    left: 100%;
+}
+
+::ng-deep .playbackSpeed1 .noUi-value-large {
+    left: -200%;
+}
+
+// HANDLE
+
+::ng-deep .noUi-vertical .noUi-handle {
+    right: -26px;
+    bottom: -9px;
+    width: 60px;
+    height: 19px;
+    background: #27272c;
+    border-radius: 2px;
+    border: 1px solid #1f1f23;
+    border-top: #c0c0c00d 2px solid;
+    border-bottom: #00000071 2px solid;
+    box-shadow: inset 0 0 1px #19191d, inset 0 1px 7px #19191d,
+        0 3px 6px -3px #000000;
+    cursor: pointer;
+}
+
+::ng-deep .noUi-vertical .noUi-handle:before {
+    width: 58px;
+    height: 5px;
+    left: 0px;
+    top: 5px;
+    background: linear-gradient(#838383, rgb(192, 192, 192), #838383);
+}
+
+::ng-deep .noUi-vertical .noUi-handle:after {
+    display: none;
+}
+
+// TRACK
+
+::ng-deep .playbackSpeed1 .noUi-base,
+::ng-deep .playbackSpeed2 .noUi-base {
+    background: linear-gradient(to right, #27272b, #1b1b1d, #27272b);
+    border-radius: 2px;
+}
+
+// ================================================
+// HORIZONTAL
+// ================================================
+
+.noUi-horizontal {
+    height: 7px;
+    width: 200px;
+    border: none;
+}
+
+// TRACK
+
+::ng-deep .sloppiness1 .noUi-base,
+::ng-deep .sloppiness2 .noUi-base {
+    background: linear-gradient(to bottom, #27272b, #1b1b1d, #3d3d43);
+    border-radius: 2px;
+}
+
+// HANDLE
+
+::ng-deep .noUi-horizontal .noUi-handle {
+    right: -10px;
+    top: -11px;
+    width: 19px;
+    height: 30px;
+    background: #27272c;
+    border-radius: 2px;
+    border: 1px solid #1f1f23;
+    border-top: #c0c0c00d 2px solid;
+    border-bottom: #00000071 2px solid;
+    box-shadow: inset 0 0 1px #19191d, inset 0 1px 7px #19191d,
+        0 3px 6px -3px #000000;
+    cursor: pointer;
+    // transform: rotate(90deg);
+}
+
+::ng-deep .noUi-horizontal .noUi-handle:before {
+    width: 5px;
+    height: 26px;
+    left: 6px;
+    top: 0px;
+    background: linear-gradient(to right, #838383, rgb(192, 192, 192), #838383);
+    
+}
+
+::ng-deep .noUi-horizontal .noUi-handle:after {
+    display: none;
+}

@@ -1,53 +1,64 @@
-<div class="flex flex-col items-center h-screen bg-gray-50">
-    <!-- Header -->
-    <div class="flex flex-col items-center p-5" id="header">
-        <h1 class="text-green-300 font-bebas-neue text-7xl">
-            Pause<span class="text-gray-300">Tape</span>
-        </h1>
-        <button class="text-xs shadow-sm" (click)="toggleAudioOnOff()">
-            ON/OFF
-        </button>
-    </div>
-
-    <!-- Main White Container -->
+<div
+    class="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-zinc-900 to-black"
+>
+    <!-- Main Container -->
     <div
-        class="bg-white w-[calc(67vw)] h-[calc(67vh)] flex flex-col justify-center rounded-xl shadow-xl z-0"
+        class="bg-gradient-to-b from-zinc-800 to-zinc-900 w-[calc(67vw)] h-[calc(85vh)] flex flex-col justify-evenly items-center rounded-xl shadow-xl z-0 relative"
     >
+        <!-- On/Off Btn -->
+        <button
+            class="text-xs shadow-sm w-10 h-10 bg-zinc-300 pt-1 pb-1 pl-0 pr-0 rounded-full absolute top-3 left-3 gradient-button"
+            [ngClass]="{ isOn: isOn }"
+            (click)="toggleAudioOnOff()"
+        >
+            <span class="text-zinc-700 font-bold on-btn-label"> ON </span>
+        </button>
+
+        <!-- Logo -->
+        <h1
+            class="text-zinc-700 font-bebas-neue text-7xl text-stroke"
+            [ngClass]="{ 'on-title': isOn }"
+        >
+            SupaFlex
+        </h1>
+
         <!-- Cassettes -->
-        <div class="flex flex-row justify-evenly">
+        <div class="flex flex-row justify-evenly w-full">
             <!-- Deck 1 -->
             <div class="flex flex-col items-center gap-10">
+                <!-- Sloppiness -->
+                <div class="flex justify-center items-center gap-3">
+                    <label
+                        for="sloppiness-1"
+                        class="font-bebas-neue text-zinc-500"
+                        >tight</label
+                    >
+                    <app-slider
+                        [settings]="sloppinessSettings"
+                        [deckNb]="1"
+                        [name]="'sloppiness1'"
+                        (dataEmitter)="handleSloppinessChange($event, 1)"
+                    ></app-slider>
+                    <label
+                        for="sloppiness-1"
+                        class="font-bebas-neue text-zinc-500"
+                        >sloppy</label
+                    >
+                </div>
+
+                <!-- Cassette -->
                 <app-cassette
                     class="cassette1"
                     [title]="'Hard Bop #3'"
                     [color]="'green'"
                 ></app-cassette>
 
-                <div class="flex justify-center items-center gap-3">
-                    <label
-                        for="sloppiness-1"
-                        class="font-bebas-neue text-gray-400"
-                        >tight</label
-                    >
-                    <input
-                        id="sloppiness-1"
-                        type="range"
-                        min="0.01"
-                        max="0.1"
-                        step="0.01"
-                        [(ngModel)]="sloppiness1"
-                    />
-                    <label
-                        for="sloppiness-1"
-                        class="font-bebas-neue text-gray-400"
-                        >sloppy</label
-                    >
-                </div>
-
-                <div>{{ deck1.state }}</div>
+                <!-- <div>{{ deck1.state }}</div> -->
 
                 <!-- Buttons Deck 1 -->
-                <div class="container-deck1 flex flex-row gap-[3px] w-fit z-10">
+                <div
+                    class="container-deck1 flex flex-row items-center justify-center gap-[2px] w-[315px] z-10"
+                >
                     <app-tape-recorder-button
                         *ngFor="let btn of srcButtons"
                         iconName="{{ btn }}"
@@ -60,91 +71,60 @@
 
             <!-- Speed Control -->
             <div class="flex flex-col items-center">
-                <div class="flex">
-                    <input
-                        type="range"
-                        id="speed-control-1"
-                        name="speed1"
-                        min="-3"
-                        max="3"
-                        step="0.05"
-                        list="markers"
-                        orient="vertical"
-                        class="h-[340px] w-20"
-                        [(ngModel)]="playbackSpeed1"
-                    />
-                    <div
-                        class="flex flex-col items-center justify-between font-bebas-neue text-2xl text-gray-400"
-                    >
-                        <div>3</div>
-                        <div>2</div>
-                        <div>1</div>
-                        <div>0</div>
-                        <div>-1</div>
-                        <div>-2</div>
-                        <div>-3</div>
-                    </div>
-                    <input
-                        type="range"
-                        id="speed-control-2"
-                        name="speed2"
-                        min="-3"
-                        max="3"
-                        step="0.05"
-                        list="markers"
-                        orient="vertical"
-                        class="h-[340px] w-20"
-                        [(ngModel)]="playbackSpeed2"
-                    />
-                    <!-- Markers  -->
-                    <datalist id="markers">
-                        <option value="-3"></option>
-                        <option value="-2"></option>
-                        <option value="-1"></option>
-                        <option value="0"></option>
-                        <option value="1"></option>
-                        <option value="2"></option>
-                        <option value="3"></option>
-                    </datalist>
+                <div class="flex gap-20">
+                    <app-slider
+                        [settings]="speedCtrlSettings"
+                        [deckNb]="1"
+                        [name]="'playbackSpeed1'"
+                        [grad]="true"
+                        (dataEmitter)="handlePlaybackSpeedChange($event, 1)"
+                    ></app-slider>
+                    <app-slider
+                        [settings]="speedCtrlSettings"
+                        [deckNb]="2"
+                        [name]="'playbackSpeed2'"
+                        [grad]="true"
+                        (dataEmitter)="handlePlaybackSpeedChange($event, 2)"
+                    ></app-slider>
                 </div>
-                <div class="mt-5 font-bebas-neue text-gray-400">
+                <div class="mt-5 font-bebas-neue text-zinc-500">
                     PLAYBACK SPEED
                 </div>
             </div>
 
             <!-- Deck 2 -->
             <div class="flex flex-col items-center gap-10">
+                <!-- Sloppiness -->
+                <div class="flex justify-center items-center gap-3">
+                    <label
+                        for="sloppiness-2"
+                        class="font-bebas-neue text-zinc-500"
+                        >tight</label
+                    >
+                    <app-slider
+                        [settings]="sloppinessSettings"
+                        [deckNb]="2"
+                        [name]="'sloppiness2'"
+                        (dataEmitter)="handleSloppinessChange($event, 2)"
+                    ></app-slider>
+                    <label
+                        for="sloppiness-2"
+                        class="font-bebas-neue text-zinc-500"
+                        >sloppy</label
+                    >
+                </div>
+
+                <!-- Cassette -->
                 <app-cassette
                     class="cassette2"
                     [title]="'Chop Mix #1'"
                     [color]="'blue'"
                 ></app-cassette>
 
-                <div class="flex justify-center items-center gap-3">
-                    <label
-                        for="sloppiness-2"
-                        class="font-bebas-neue text-gray-400"
-                        >tight</label
-                    >
-                    <input
-                        id="sloppiness-2"
-                        type="range"
-                        min="0.01"
-                        max="0.1"
-                        step="0.01"
-                        [(ngModel)]="sloppiness2"
-                    />
-                    <label
-                        for="sloppiness-2"
-                        class="font-bebas-neue text-gray-400"
-                        >sloppy</label
-                    >
-                </div>
-
-                <div>{{ deck2.state }}</div>
+                <!-- <div>{{ deck2.state }}</div> -->
 
                 <!-- Buttons Deck 2 -->
-                <div class="container-deck2 flex flex-row gap-[3px] w-fit z-10">
+                <div class="container-deck2 flex flex-row gap-[2px] w-fit z-10">
                     <app-tape-recorder-button
                         *ngFor="let btn of dstButtons"
                         iconName="{{ btn }}"
@@ -155,5 +135,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- Mixbus Monitor -->
+        <app-mixbus-monitor
+            [isPlaying]="(deck1.state !== 'stopped' && deck1.state !== 'paused') || (deck2.state !== 'stopped' && deck2.state !== 'paused')"
+            [waveformBuffer]="mixWaveform"
+        ></app-mixbus-monitor>
     </div>
 </div>

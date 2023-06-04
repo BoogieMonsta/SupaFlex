@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { el } from '@elemaudio/core';
 import WebRenderer from '@elemaudio/web-renderer';
-import { Transport, TransportState } from './models/AudioTransport';
 import { AudioTransportService } from './audio-transport.service';
-import { Tape } from './models/Tape';
+import { Transport, TransportState } from './models/AudioTransport';
 import { Deck } from './models/Deck';
+import { Tape } from './models/Tape';
+import { SliderDirection, SliderOrientation, SliderSettings } from './slider/slider.component';
 
 const core = new WebRenderer();
 let ctx = new AudioContext();
@@ -18,6 +19,28 @@ let audioBuffer: AudioBuffer;
 export class AppComponent implements OnInit {
     srcButtons: string[] = [];
     dstButtons: string[] = [];
+
+    speedCtrlSettings: SliderSettings = {
+        orientation: SliderOrientation.vertical,
+        direction: SliderDirection.rtl,
+        start: [1],
+        step: 0.01,
+        range: {
+            'min': -3,
+            'max': 3,
+        },
+    };
+
+    sloppinessSettings: SliderSettings = {
+        orientation: SliderOrientation.horizontal,
+        direction: SliderDirection.ltr,
+        start: [0.03],
+        // step: 0.01,
+        range: {
+            'min': 0.01,
+            'max': 0.1,
+        },
+    };
 
     isOn = false;
     deck1: Deck = {
@@ -67,41 +90,7 @@ export class AppComponent implements OnInit {
         sloppiness: 0,
     };
 
-    private _playbackSpeed1 = 1;
-    set playbackSpeed1(speed: number) {
-        this._playbackSpeed1 = speed;
-        this.refreshPlaybackSpeed(this.sourceTape, speed);
-    }
-    get playbackSpeed1() {
-        return this._playbackSpeed1;
-    }
-
-    private _playbackSpeed2 = 1;
-    set playbackSpeed2(speed: number) {
-        this._playbackSpeed2 = speed;
-        this.refreshPlaybackSpeed(this.destTape, speed);
-    }
-    get playbackSpeed2() {
-        return this._playbackSpeed2;
-    }
-
-    private _sloppiness1 = 0.03;
-    set sloppiness1(sloppiness: number) {
-        this._sloppiness1 = sloppiness;
-        this.refreshSloppiness(this.sourceTape, sloppiness);
-    }
-    get sloppiness1() {
-        return this._sloppiness1;
-    }
-
-    private _sloppiness2 = 0.03;
-    set sloppiness2(sloppiness: number) {
-        this._sloppiness2 = sloppiness;
-        this.refreshSloppiness(this.destTape, sloppiness);
-    }
-    get sloppiness2() {
-        return this._sloppiness2;
-    }
+    mixWaveform: any[] = [];
 
     constructor(private transportService: AudioTransportService) {}
 
@@ -117,9 +106,12 @@ export class AppComponent implements OnInit {
 
             this.initTapes();
 
-            // TODO implement with el.snapshot()
-            core.on('snapshot', (e: any) => {
-                console.log(e);
+            core.on('scope', (e) => {
+                if (e.source === 'mix_L') {
+                    this.mixWaveform = e.data;
+                }
+                if (e.source === 'mix_R') {
+                }
             });
         });
         await this.main();
@@ -147,6 +139,24 @@ export class AppComponent implements OnInit {
             tape.playing, // trigger (1 = one-shot)
             tape.playbackRate
         );
+    }
+
+    handlePlaybackSpeedChange(event: any, deckNb: number) {
+        if (deckNb !== 1 && deckNb !== 2) {
+            console.error('Invalid deck number', deckNb);
+            return;
+        }
+        const tape = deckNb === 1 ? this.sourceTape : this.destTape;
+        this.refreshPlaybackSpeed(tape, event.value);
+    }
+
+    handleSloppinessChange(event: any, deckNb: number) {
+        if (deckNb !== 1 && deckNb !== 2) {
+            console.error('Invalid deck number', deckNb);
+            return;
+        }
+        const tape = deckNb === 1 ? this.sourceTape : this.destTape;
+        this.refreshSloppiness(tape, event.value);
     }
 
     onBtnDown(btnData: any) {
@@ -372,7 +382,10 @@ export class AppComponent implements OnInit {
         );
 
         if (play) {
-            core.render(this.mixTape.L, this.mixTape.R);
+            core.render(
+                el.scope({ name: 'mix_L' }, this.mixTape.L),
+                el.scope({ name: 'mix_R' }, this.mixTape.R)
+            );
         }
     }
 
